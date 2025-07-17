@@ -165,37 +165,7 @@ def scrape_site_in_tab(driver, site_id, tab_index, total_sites):
             # Récupération de l'heure de mise à jour
             try:
                 update_element = driver.find_element(By.CSS_SELECTOR, ".wgfcst_update_time")
-                update_time_raw = update_element.text.strip()
-                
-                # Convertir l'heure de mise à jour en heure locale
-                # Le format est généralement "dd.mm. HH:MM UTC" ou "dd.mm. HH:MM"
-                import re
-                match = re.match(r'(\d+)\.(\d+)\.\s*(\d+):(\d+)\s*(UTC)?', update_time_raw)
-                if match:
-                    day, month, hour_utc, minute = match.groups()[:4]
-                    hour_utc = int(hour_utc)
-                    minute = int(minute)
-                    
-                    # Détecter automatiquement l'heure d'été
-                    import os
-                    
-                    # Forcer le timezone à Europe/Paris pour GitHub Actions
-                    os.environ['TZ'] = 'Europe/Paris'
-                    datetime.now().astimezone()  # Force la mise à jour du timezone
-                    
-                    now = datetime.now()
-                    is_dst = now.astimezone().dst() != datetime.timedelta(0)
-                    
-                    # Convertir UTC vers heure locale (+2h en été, +1h en hiver)
-                    offset = 2 if is_dst else 1
-                    hour_local = hour_utc + offset
-                    if hour_local >= 24:
-                        hour_local -= 24
-                    
-                    update_time = f"{day}.{month}. {hour_local:02d}:{minute:02d}"
-                else:
-                    # Si le format n'est pas reconnu, utiliser tel quel
-                    update_time = update_time_raw
+                update_time = update_element.text.strip()
             except:
                 # Fallback avec heure locale actuelle
                 now = datetime.now()
