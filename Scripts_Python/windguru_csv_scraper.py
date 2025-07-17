@@ -47,34 +47,8 @@ def extract_table_data(table, model_name, update_time):
     # Extraction des données de base
     heures_raw = [td.get_text(strip=True) for td in rows[0].find_all("td")]
     
-    # Conversion des heures UTC vers CEST
-    heures = []
-    for heure_raw in heures_raw:
-        if heure_raw:
-            # Chercher le pattern jour + date + heure
-            import re
-            match = re.match(r'([A-Za-z]+)(\d+)\.(\d+)h', heure_raw)
-            if match:
-                jour = match.group(1)
-                date = match.group(2)
-                heure_utc = int(match.group(3))
-                
-                # Détecter automatiquement l'heure d'été
-                import datetime
-                now = datetime.datetime.now()
-                is_dst = now.astimezone().dst() != datetime.timedelta(0)
-                
-                # Convertir UTC vers heure locale (+2h en été, +1h en hiver)
-                offset = 2 if is_dst else 1
-                heure_locale = heure_utc + offset
-                if heure_locale >= 24:
-                    heure_locale -= 24
-                
-                heures.append(f"{jour}{date}.{heure_locale:02d}h")
-            else:
-                heures.append(heure_raw)
-        else:
-            heures.append(heure_raw)
+    # Les heures sont déjà en heure locale sur Windguru, pas besoin de conversion
+    heures = heures_raw
     vent = [td.text.strip() for td in rows[1].find_all("td")]
     rafales = [td.text.strip() for td in rows[2].find_all("td")]
     
@@ -191,9 +165,42 @@ def scrape_site_in_tab(driver, site_id, tab_index, total_sites):
             # Récupération de l'heure de mise à jour
             try:
                 update_element = driver.find_element(By.CSS_SELECTOR, ".wgfcst_update_time")
-                update_time = update_element.text.strip()
+                update_time_raw = update_element.text.strip()
+                
+                # Convertir l'heure de mise à jour en heure locale
+                # Le format est généralement "dd.mm. HH:MM UTC" ou "dd.mm. HH:MM"
+                import re
+                match = re.match(r'(\d+)\.(\d+)\.\s*(\d+):(\d+)\s*(UTC)?', update_time_raw)
+                if match:
+                    day, month, hour_utc, minute = match.groups()[:4]
+                    hour_utc = int(hour_utc)
+                    minute = int(minute)
+                    
+                    # Détecter automatiquement l'heure d'été
+                    import datetime
+                    import os
+                    
+                    # Forcer le timezone à Europe/Paris pour GitHub Actions
+                    os.environ['TZ'] = 'Europe/Paris'
+                    datetime.datetime.now().astimezone()  # Force la mise à jour du timezone
+                    
+                    now = datetime.datetime.now()
+                    is_dst = now.astimezone().dst() != datetime.timedelta(0)
+                    
+                    # Convertir UTC vers heure locale (+2h en été, +1h en hiver)
+                    offset = 2 if is_dst else 1
+                    hour_local = hour_utc + offset
+                    if hour_local >= 24:
+                        hour_local -= 24
+                    
+                    update_time = f"{day}.{month}. {hour_local:02d}:{minute:02d}"
+                else:
+                    # Si le format n'est pas reconnu, utiliser tel quel
+                    update_time = update_time_raw
             except:
-                update_time = datetime.now().strftime("%d.%m. %H:%M CEST")
+                # Fallback avec heure locale actuelle
+                now = datetime.now()
+                update_time = now.strftime("%d.%m. %H:%M")
             
             # Analyse du HTML pour trouver toutes les tables de prévisions
             soup = BeautifulSoup(driver.page_source, "html.parser")
