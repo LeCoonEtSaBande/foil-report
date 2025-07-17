@@ -854,9 +854,9 @@ class HTMLGenerator:
             .data-table th,
             .data-table td {{
                 padding: 4px 6px;
-                min-width: 28px;
-                max-width: 35px;
-                width: 28px;
+                min-width: 84px;
+                max-width: 105px;
+                width: 84px;
                 font-size: 0.8em;
                 text-align: center;
                 border: 1px solid #e0e0e0;
@@ -976,9 +976,9 @@ class HTMLGenerator:
             .data-table th,
             .data-table td {{
                 padding: 3px 4px;
-                min-width: 24px;
-                max-width: 30px;
-                width: 24px;
+                min-width: 72px;
+                max-width: 90px;
+                width: 72px;
                 font-size: 0.75em;
             }}
             
