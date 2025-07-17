@@ -1,0 +1,79 @@
+name: Foil Report - Mise à jour quotidienne
+
+on:
+  schedule:
+    # Exécutions quotidiennes à 6h, 12h et 18h (heure française)
+    - cron: '0 4 * * *'   # 6h00 heure française (4h00 UTC)
+    - cron: '0 10 * * *'  # 12h00 heure française (10h00 UTC)
+    - cron: '0 16 * * *'  # 18h00 heure française (16h00 UTC)
+  workflow_dispatch:  # Permet l'exécution manuelle
+
+jobs:
+  update-foil-report:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout du repository
+      uses: actions/checkout@v4
+      
+    - name: Configuration de Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Installation des dépendances
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Installation de Firefox
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y firefox-esr
+        
+    - name: Téléchargement de GeckoDriver
+      run: |
+        wget https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz
+        tar -xzf geckodriver-v0.33.0-linux64.tar.gz
+        sudo mv geckodriver /usr/local/bin/
+        sudo chmod +x /usr/local/bin/geckodriver
+        
+    - name: Création des dossiers nécessaires
+      run: |
+        mkdir -p Donnees_Temporaires
+        mkdir -p Drivers
+        
+    - name: Copie du GeckoDriver
+      run: |
+        cp /usr/local/bin/geckodriver Drivers/geckodriver
+        
+    - name: Configuration des chemins
+      run: |
+        echo "FIREFOX_PATH=/usr/bin/firefox-esr" >> Scripts_Python/config.py
+        echo "DRIVER_PATH=./Drivers/geckodriver" >> Scripts_Python/config.py
+        
+    - name: Exécution du scraper
+      run: |
+        cd Scripts_Python
+        python windguru_csv_scraper.py
+        
+    - name: Génération du rapport HTML
+      run: |
+        cd Scripts_Python
+        python csv_to_html_viewer.py
+        
+    - name: Upload des données CSV
+      uses: actions/upload-artifact@v3
+      with:
+        name: foil-report-data
+        path: Donnees_Temporaires/
+        retention-days: 7
+        
+    - name: Déploiement sur GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      if: github.ref == 'refs/heads/main'
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./Donnees_Temporaires
+        publish_branch: gh-pages
+        force_orphan: true 
