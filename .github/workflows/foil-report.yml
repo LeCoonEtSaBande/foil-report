@@ -63,7 +63,7 @@ jobs:
         python csv_to_html_viewer.py
         
     - name: Upload des données CSV
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: foil-report-data
         path: Donnees_Temporaires/
