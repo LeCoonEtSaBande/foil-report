@@ -162,14 +162,10 @@ def scrape_site_in_tab(driver, site_id, tab_index, total_sites):
             except Exception as e:
                 pass
             
-            # Récupération de l'heure de mise à jour
-            try:
-                update_element = driver.find_element(By.CSS_SELECTOR, ".wgfcst_update_time")
-                update_time = update_element.text.strip()
-            except:
-                # Fallback avec heure locale actuelle
-                now = datetime.now()
-                update_time = now.strftime("%d.%m. %H:%M")
+            # Utiliser l'heure locale française actuelle comme heure de mise à jour
+            import os
+            os.environ['TZ'] = 'Europe/Paris'
+            update_time = datetime.now().strftime("%d.%m. %H:%M")
             
             # Analyse du HTML pour trouver toutes les tables de prévisions
             soup = BeautifulSoup(driver.page_source, "html.parser")
@@ -288,6 +284,12 @@ def main():
     """Fonction principale avec parallélisation"""
     total_sites = len(SITES)
     logger = init_logger(total_sites)
+    
+    # Afficher l'heure locale française au moment de l'exécution
+    import os
+    os.environ['TZ'] = 'Europe/Paris'
+    current_time = datetime.now().strftime("%d/%m/%Y à %H:%M:%S")
+    print(f"🕐 Heure locale française: {current_time}")
     
     logger.start_scraping()
     
