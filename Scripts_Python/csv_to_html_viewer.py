@@ -226,20 +226,12 @@ def parse_heure(heure_str: str) -> Tuple[str, str]:
     if match:
         jour = match.group(1)
         date = match.group(2)
-        heure_utc = int(match.group(3))
-        
-        # Convertir UTC vers CEST (+2h en été)
-        heure_cest = heure_utc + 2
-        
-        # Gérer le passage de jour si nécessaire
-        if heure_cest >= 24:
-            heure_cest -= 24
-            # Ici on pourrait aussi changer le jour, mais pour l'instant on garde simple
+        heure = int(match.group(3))
         
         # Convertir le jour en français
         jour_fr = get_jour_complet(jour)
         
-        return f"{jour_fr} {date}", f"{heure_cest}"
+        return f"{jour_fr} {date}", f"{heure}"
     else:
         return heure_str, ""
 
