@@ -207,7 +207,12 @@ def scrape_site_in_tab(driver, site_id, tab_index, total_sites):
 def scrape_windguru_parallel():
     """Scrape tous les sites en parallèle avec des onglets"""
     logger = get_logger()
-    driver = webdriver.Firefox(service=Service(DRIVER_PATH), options=options)
+    
+    # Utiliser Selenium Manager si DRIVER_PATH est None, sinon utiliser le chemin spécifié
+    if DRIVER_PATH is None:
+        driver = webdriver.Firefox(options=options)
+    else:
+        driver = webdriver.Firefox(service=Service(DRIVER_PATH), options=options)
     results = {}
     total_sites = len(SITES)
     
