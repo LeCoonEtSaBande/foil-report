@@ -582,6 +582,9 @@ class HTMLGenerator:
     
     def generate_html(self) -> str:
         """Génère le contenu HTML complet."""
+        # Forcer le timezone à Europe/Paris pour avoir l'heure locale française
+        import os
+        os.environ['TZ'] = 'Europe/Paris'
         current_time = datetime.now().strftime('%d/%m/%Y à %H:%M')
         
         html = f"""
