@@ -52,6 +52,26 @@ jobs:
         cd Scripts_Python
         python csv_to_html_viewer.py
         
+    - name: Création du fichier index.html
+      run: |
+        cd Donnees_Temporaires
+        # Créer un fichier index.html qui redirige vers le rapport principal
+        cat > index.html << 'EOF'
+        <!DOCTYPE html>
+        <html lang="fr">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="refresh" content="0; url=HTML_FROM_CSV.html">
+            <title>Foil Report - Redirection</title>
+        </head>
+        <body>
+            <h1>Foil Report</h1>
+            <p>Redirection vers le rapport météo...</p>
+            <p><a href="HTML_FROM_CSV.html">Cliquez ici si la redirection ne fonctionne pas</a></p>
+        </body>
+        </html>
+        EOF
+        
     - name: Upload des données CSV
       uses: actions/upload-artifact@v4
       with:
