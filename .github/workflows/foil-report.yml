@@ -26,18 +26,16 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         
-    - name: Installation de Firefox (mode headless)
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y firefox-esr || sudo apt-get install -y firefox || echo "Firefox installation skipped - using headless mode"
+    - name: Setup Firefox
+      uses: browser-actions/setup-firefox@v1
+      with:
+        firefox-version: 'latest'
         
-    - name: Téléchargement de GeckoDriver
-      run: |
-        wget https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz
-        tar -xzf geckodriver-v0.33.0-linux64.tar.gz
-        sudo mv geckodriver /usr/local/bin/
-        sudo chmod +x /usr/local/bin/geckodriver
-        geckodriver --version
+    - name: Setup GeckoDriver
+      uses: nanasess/setup-chromedriver@v2
+      with:
+        chromedriver-version: 'latest'
+        geckodriver-version: 'v0.33.0'
         
     - name: Création des dossiers nécessaires
       run: |
@@ -46,11 +44,11 @@ jobs:
         
     - name: Copie du GeckoDriver
       run: |
-        cp /usr/local/bin/geckodriver Drivers/geckodriver
+        cp $(which geckodriver) Drivers/geckodriver
         
     - name: Configuration des chemins
       run: |
-        echo 'FIREFOX_PATH = "/usr/bin/firefox"' >> Scripts_Python/config.py
+        echo 'FIREFOX_PATH = "$(which firefox)"' >> Scripts_Python/config.py
         echo 'DRIVER_PATH = "./Drivers/geckodriver"' >> Scripts_Python/config.py
         echo 'HEADLESS_MODE = True' >> Scripts_Python/config.py
         
