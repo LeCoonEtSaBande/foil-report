@@ -4,6 +4,8 @@ on:
   schedule:
     # Exécutions quotidiennes à 6h, 12h et 18h (heure française)
     - cron: '0 4 * * *'   # 6h00 heure française (4h00 UTC)
+    - cron: '0 8 * * *'  # 10h00 heure française (8h00 UTC)
+    - cron: '0 9 * * *'  # 11h00 heure française (9h00 UTC)
     - cron: '0 10 * * *'  # 12h00 heure française (10h00 UTC)
     - cron: '0 16 * * *'  # 18h00 heure française (16h00 UTC)
   workflow_dispatch:  # Permet l'exécution manuelle
