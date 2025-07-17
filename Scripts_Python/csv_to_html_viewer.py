@@ -812,45 +812,120 @@ class HTMLGenerator:
                 text-align: center;
             }}
             
+            /* Container de scroll pour mobile */
+            .table-container {{
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                background: white;
+                margin: 10px 0;
+                /* Indicateur de scroll */
+                scrollbar-width: thin;
+                scrollbar-color: #888 #f1f1f1;
+            }}
+            
+            /* Style de la scrollbar pour WebKit */
+            .table-container::-webkit-scrollbar {{
+                height: 8px;
+            }}
+            
+            .table-container::-webkit-scrollbar-track {{
+                background: #f1f1f1;
+                border-radius: 4px;
+            }}
+            
+            .table-container::-webkit-scrollbar-thumb {{
+                background: #888;
+                border-radius: 4px;
+            }}
+            
+            .table-container::-webkit-scrollbar-thumb:hover {{
+                background: #555;
+            }}
+            
             .data-table {{
-                font-size: 0.65em;
-                min-width: auto;
+                font-size: 0.75em;
+                min-width: max-content;
                 width: 100%;
+                border-collapse: collapse;
             }}
             
             .data-table th,
             .data-table td {{
-                padding: 2px 1px;
-                min-width: 20px;
-                max-width: 25px;
-                width: 20px;
-                font-size: 0.7em;
-                word-wrap: break-word;
-                overflow: hidden;
-                text-overflow: ellipsis;
+                padding: 4px 6px;
+                min-width: 28px;
+                max-width: 35px;
+                width: 28px;
+                font-size: 0.8em;
+                text-align: center;
+                border: 1px solid #e0e0e0;
+                vertical-align: middle;
             }}
             
             .data-table td:first-child,
             .data-table th:first-child {{
-                width: 80px;
-                min-width: 80px;
-                max-width: 80px;
-                font-size: 0.7em;
+                width: 90px;
+                min-width: 90px;
+                max-width: 90px;
+                font-size: 0.8em;
+                font-weight: bold;
+                background: #f8f9fa;
+                position: sticky;
+                left: 0;
+                z-index: 10;
+                border-right: 2px solid #dee2e6;
+            }}
+            
+            /* Améliorer la lisibilité des en-têtes */
+            .data-table th {{
+                background: #e9ecef;
+                font-weight: 600;
+                color: #495057;
+                border-bottom: 2px solid #dee2e6;
+            }}
+            
+            /* Alternance des couleurs pour les lignes */
+            .data-table tr:nth-child(even) {{
+                background-color: #f8f9fa;
+            }}
+            
+            .data-table tr:nth-child(odd) {{
+                background-color: #ffffff;
             }}
             
             /* Réduire la taille des flèches de direction */
             .wind-direction {{
-                font-size: 1em;
+                font-size: 1.2em;
             }}
             
             /* Réduire la taille des étoiles */
             .note-stars {{
-                font-size: 0.9em;
+                font-size: 1em;
             }}
             
             /* Optimiser l'affichage des nuages */
             .cloud-symbol {{
-                font-size: 0.8em;
+                font-size: 1em;
+            }}
+            
+            /* Améliorer l'espacement des étoiles */
+            .note-stars div {{
+                line-height: 1.2;
+                margin: 2px 0;
+            }}
+            
+            /* Indicateur de scroll horizontal */
+            .table-container::after {{
+                content: "← → Faites défiler horizontalement";
+                display: block;
+                text-align: center;
+                font-size: 0.7em;
+                color: #666;
+                padding: 5px;
+                background: #f8f9fa;
+                border-top: 1px solid #dee2e6;
+                border-radius: 0 0 8px 8px;
             }}
         }}
         
@@ -888,37 +963,43 @@ class HTMLGenerator:
                 font-size: 0.7em;
             }}
             
+            /* Container de scroll pour mobile */
+            .table-container {{
+                margin: 8px 0;
+                border-radius: 6px;
+            }}
+            
             .data-table {{
-                font-size: 0.6em;
+                font-size: 0.7em;
             }}
             
             .data-table th,
             .data-table td {{
-                padding: 1px 1px;
-                min-width: 18px;
-                max-width: 22px;
-                width: 18px;
-                font-size: 0.65em;
+                padding: 3px 4px;
+                min-width: 24px;
+                max-width: 30px;
+                width: 24px;
+                font-size: 0.75em;
             }}
             
             .data-table td:first-child,
             .data-table th:first-child {{
-                width: 70px;
-                min-width: 70px;
-                max-width: 70px;
-                font-size: 0.65em;
+                width: 80px;
+                min-width: 80px;
+                max-width: 80px;
+                font-size: 0.75em;
             }}
             
             .wind-direction {{
-                font-size: 0.9em;
+                font-size: 1.1em;
             }}
             
             .note-stars {{
-                font-size: 0.8em;
+                font-size: 0.9em;
             }}
             
             .cloud-symbol {{
-                font-size: 0.7em;
+                font-size: 0.9em;
             }}
         }}
     </style>
@@ -986,7 +1067,7 @@ class HTMLGenerator:
                     <h2>📍 {site_name}</h2>
                     <span class="update-time">AROME: {update_time_arome} | WG: {update_time_wg}</span>
                 </div>
-                <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                <div class="table-container" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
         """
         html += self._generate_merged_table_html(site_id, merged)
         html += """
