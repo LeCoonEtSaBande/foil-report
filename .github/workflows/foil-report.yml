@@ -50,9 +50,9 @@ jobs:
         
     - name: Configuration des chemins
       run: |
-        echo "FIREFOX_PATH=/usr/bin/firefox" >> Scripts_Python/config.py
-        echo "DRIVER_PATH=./Drivers/geckodriver" >> Scripts_Python/config.py
-        echo "HEADLESS_MODE=True" >> Scripts_Python/config.py
+        echo 'FIREFOX_PATH = "/usr/bin/firefox"' >> Scripts_Python/config.py
+        echo 'DRIVER_PATH = "./Drivers/geckodriver"' >> Scripts_Python/config.py
+        echo 'HEADLESS_MODE = True' >> Scripts_Python/config.py
         
     - name: Exécution du scraper
       run: |
