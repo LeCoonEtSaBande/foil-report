@@ -32,9 +32,8 @@ jobs:
         firefox-version: 'latest'
         
     - name: Setup GeckoDriver
-      uses: nanasess/setup-chromedriver@v2
+      uses: nanasess/setup-geckodriver@v2
       with:
-        chromedriver-version: 'latest'
         geckodriver-version: 'v0.33.0'
         
     - name: Création des dossiers nécessaires
