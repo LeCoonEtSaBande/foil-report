@@ -752,13 +752,127 @@ class HTMLGenerator:
         
         @media (max-width: 768px) {{
             .container {{
-                margin: 5px;
-                border-radius: 10px;
-                max-width: 98vw;
+                margin: 2px;
+                border-radius: 8px;
+                max-width: 100vw;
+                aspect-ratio: auto;
+                min-height: 100vh;
+            }}
+            
+            .header {{
+                padding: 15px 20px;
             }}
             
             .header h1 {{
-                font-size: 1.5em;
+                font-size: 1.3em;
+                text-align: center;
+            }}
+            
+            .content {{
+                padding: 10px;
+            }}
+            
+            .site-card {{
+                margin-bottom: 15px;
+            }}
+            
+            .site-header {{
+                padding: 12px 15px;
+                flex-direction: column;
+                gap: 5px;
+            }}
+            
+            .site-header h2 {{
+                font-size: 1.1em;
+                text-align: center;
+            }}
+            
+            .site-header .update-time {{
+                font-size: 0.8em;
+                text-align: center;
+            }}
+            
+            .data-table {{
+                font-size: 0.65em;
+                min-width: 100%;
+            }}
+            
+            .data-table th,
+            .data-table td {{
+                padding: 4px 2px;
+                min-width: 20px;
+                max-width: 25px;
+                word-wrap: break-word;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }}
+            
+            .data-table td:first-child,
+            .data-table th:first-child {{
+                width: 80px;
+                min-width: 80px;
+                max-width: 80px;
+                font-size: 0.7em;
+            }}
+            
+            .wind-direction {{
+                font-size: 1em !important;
+            }}
+            
+            .note-stars {{
+                font-size: 1em;
+            }}
+            
+            .footer {{
+                padding: 10px;
+                font-size: 0.8em;
+            }}
+        }}
+        
+        @media (max-width: 480px) {{
+            .container {{
+                margin: 1px;
+                border-radius: 5px;
+            }}
+            
+            .header h1 {{
+                font-size: 1.1em;
+            }}
+            
+            .site-header h2 {{
+                font-size: 1em;
+            }}
+            
+            .data-table {{
+                font-size: 0.6em;
+            }}
+            
+            .data-table th,
+            .data-table td {{
+                padding: 3px 1px;
+                min-width: 18px;
+                max-width: 22px;
+            }}
+            
+            .data-table td:first-child,
+            .data-table th:first-child {{
+                width: 70px;
+                min-width: 70px;
+                max-width: 70px;
+                font-size: 0.65em;
+            }}
+        }}
+        
+        /* Orientation paysage sur mobile */
+        @media (max-width: 768px) and (orientation: landscape) {{
+            .container {{
+                margin: 5px;
+                aspect-ratio: auto;
+                min-height: auto;
+            }}
+            
+            .header h1 {{
+                font-size: 1.2em;
             }}
             
             .data-table {{
@@ -768,6 +882,8 @@ class HTMLGenerator:
             .data-table th,
             .data-table td {{
                 padding: 3px 1px;
+                min-width: 22px;
+                max-width: 28px;
             }}
         }}
     </style>
