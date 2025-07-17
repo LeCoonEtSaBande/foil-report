@@ -849,6 +849,7 @@ class HTMLGenerator:
                 min-width: max-content;
                 width: 100%;
                 border-collapse: collapse;
+                table-layout: auto;
             }}
             
             .data-table th,
@@ -861,6 +862,13 @@ class HTMLGenerator:
                 text-align: center;
                 border: 1px solid #e0e0e0;
                 vertical-align: middle;
+            }}
+            
+            /* Les colonnes de jours s'adaptent automatiquement à la largeur des colonnes d'heures */
+            .data-table th[colspan] {{
+                width: auto;
+                min-width: auto;
+                max-width: none;
             }}
             
             .data-table td:first-child,
@@ -915,18 +923,7 @@ class HTMLGenerator:
                 margin: 2px 0;
             }}
             
-            /* Indicateur de scroll horizontal */
-            .table-container::after {{
-                content: "← → Faites défiler horizontalement";
-                display: block;
-                text-align: center;
-                font-size: 0.7em;
-                color: #666;
-                padding: 5px;
-                background: #f8f9fa;
-                border-top: 1px solid #dee2e6;
-                border-radius: 0 0 8px 8px;
-            }}
+
         }}
         
         @media (max-width: 480px) {{
@@ -971,6 +968,7 @@ class HTMLGenerator:
             
             .data-table {{
                 font-size: 0.7em;
+                table-layout: auto;
             }}
             
             .data-table th,
@@ -980,6 +978,13 @@ class HTMLGenerator:
                 max-width: 90px;
                 width: 72px;
                 font-size: 0.75em;
+            }}
+            
+            /* Les colonnes de jours s'adaptent automatiquement à la largeur des colonnes d'heures */
+            .data-table th[colspan] {{
+                width: auto;
+                min-width: auto;
+                max-width: none;
             }}
             
             .data-table td:first-child,
