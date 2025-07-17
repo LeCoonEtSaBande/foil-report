@@ -59,12 +59,18 @@ def extract_table_data(table, model_name, update_time):
                 date = match.group(2)
                 heure_utc = int(match.group(3))
                 
-                # Convertir UTC vers CEST (+2h en été)
-                heure_cest = heure_utc + 2
-                if heure_cest >= 24:
-                    heure_cest -= 24
+                # Détecter automatiquement l'heure d'été
+                import datetime
+                now = datetime.datetime.now()
+                is_dst = now.astimezone().dst() != datetime.timedelta(0)
                 
-                heures.append(f"{jour}{date}.{heure_cest:02d}h")
+                # Convertir UTC vers heure locale (+2h en été, +1h en hiver)
+                offset = 2 if is_dst else 1
+                heure_locale = heure_utc + offset
+                if heure_locale >= 24:
+                    heure_locale -= 24
+                
+                heures.append(f"{jour}{date}.{heure_locale:02d}h")
             else:
                 heures.append(heure_raw)
         else:
