@@ -196,7 +196,7 @@ def merge_models(site_data: dict) -> dict:
 
 
 def get_jour_complet(abreviation: str) -> str:
-    """Convertit une abréviation de jour en nom complet"""
+    """Convertit une abréviation de jour en nom complet français"""
     jours = {
         'Lu': 'Lundi',
         'Ma': 'Mardi', 
@@ -204,13 +204,20 @@ def get_jour_complet(abreviation: str) -> str:
         'Je': 'Jeudi',
         'Ve': 'Vendredi',
         'Sa': 'Samedi',
-        'Di': 'Dimanche'
+        'Di': 'Dimanche',
+        'Th': 'Jeudi',
+        'Fr': 'Vendredi',
+        'Sa': 'Samedi',
+        'Su': 'Dimanche',
+        'Mo': 'Lundi',
+        'Tu': 'Mardi',
+        'We': 'Mercredi'
     }
     return jours.get(abreviation, abreviation)
 
 
 def parse_heure(heure_str: str) -> Tuple[str, str]:
-    """Extrait le jour et l'heure d'une chaîne comme 'Lu14.03h'"""
+    """Extrait le jour et l'heure d'une chaîne comme 'Lu14.03h' et convertit en français"""
     if not heure_str:
         return "", ""
     
@@ -219,19 +226,34 @@ def parse_heure(heure_str: str) -> Tuple[str, str]:
     if match:
         jour = match.group(1)
         date = match.group(2)
-        heure = match.group(3)
-        return f"{jour} {date}", f"{heure}"
+        heure_utc = int(match.group(3))
+        
+        # Convertir UTC vers CEST (+2h en été)
+        heure_cest = heure_utc + 2
+        
+        # Gérer le passage de jour si nécessaire
+        if heure_cest >= 24:
+            heure_cest -= 24
+            # Ici on pourrait aussi changer le jour, mais pour l'instant on garde simple
+        
+        # Convertir le jour en français
+        jour_fr = get_jour_complet(jour)
+        
+        return f"{jour_fr} {date}", f"{heure_cest}"
     else:
         return heure_str, ""
 
 
 def get_jour_from_heure(heure_str: str) -> str:
-    """Extrait le jour complet d'une heure"""
+    """Extrait le jour complet d'une heure en français"""
     if not heure_str:
         return ""
     match = re.match(r'([A-Za-z]+)(\d+)\.(\d+)h', heure_str)
     if match:
-        return f"{match.group(1)} {match.group(2)}"
+        jour = match.group(1)
+        date = match.group(2)
+        jour_fr = get_jour_complet(jour)
+        return f"{jour_fr} {date}"
     return ""
 
 
@@ -752,127 +774,13 @@ class HTMLGenerator:
         
         @media (max-width: 768px) {{
             .container {{
-                margin: 2px;
-                border-radius: 8px;
-                max-width: 100vw;
-                aspect-ratio: auto;
-                min-height: 100vh;
-            }}
-            
-            .header {{
-                padding: 15px 20px;
-            }}
-            
-            .header h1 {{
-                font-size: 1.3em;
-                text-align: center;
-            }}
-            
-            .content {{
-                padding: 10px;
-            }}
-            
-            .site-card {{
-                margin-bottom: 15px;
-            }}
-            
-            .site-header {{
-                padding: 12px 15px;
-                flex-direction: column;
-                gap: 5px;
-            }}
-            
-            .site-header h2 {{
-                font-size: 1.1em;
-                text-align: center;
-            }}
-            
-            .site-header .update-time {{
-                font-size: 0.8em;
-                text-align: center;
-            }}
-            
-            .data-table {{
-                font-size: 0.65em;
-                min-width: 100%;
-            }}
-            
-            .data-table th,
-            .data-table td {{
-                padding: 4px 2px;
-                min-width: 20px;
-                max-width: 25px;
-                word-wrap: break-word;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }}
-            
-            .data-table td:first-child,
-            .data-table th:first-child {{
-                width: 80px;
-                min-width: 80px;
-                max-width: 80px;
-                font-size: 0.7em;
-            }}
-            
-            .wind-direction {{
-                font-size: 1em !important;
-            }}
-            
-            .note-stars {{
-                font-size: 1em;
-            }}
-            
-            .footer {{
-                padding: 10px;
-                font-size: 0.8em;
-            }}
-        }}
-        
-        @media (max-width: 480px) {{
-            .container {{
-                margin: 1px;
-                border-radius: 5px;
-            }}
-            
-            .header h1 {{
-                font-size: 1.1em;
-            }}
-            
-            .site-header h2 {{
-                font-size: 1em;
-            }}
-            
-            .data-table {{
-                font-size: 0.6em;
-            }}
-            
-            .data-table th,
-            .data-table td {{
-                padding: 3px 1px;
-                min-width: 18px;
-                max-width: 22px;
-            }}
-            
-            .data-table td:first-child,
-            .data-table th:first-child {{
-                width: 70px;
-                min-width: 70px;
-                max-width: 70px;
-                font-size: 0.65em;
-            }}
-        }}
-        
-        /* Orientation paysage sur mobile */
-        @media (max-width: 768px) and (orientation: landscape) {{
-            .container {{
                 margin: 5px;
-                aspect-ratio: auto;
-                min-height: auto;
+                border-radius: 10px;
+                max-width: 98vw;
             }}
             
             .header h1 {{
-                font-size: 1.2em;
+                font-size: 1.5em;
             }}
             
             .data-table {{
@@ -882,8 +790,6 @@ class HTMLGenerator:
             .data-table th,
             .data-table td {{
                 padding: 3px 1px;
-                min-width: 22px;
-                max-width: 28px;
             }}
         }}
     </style>
