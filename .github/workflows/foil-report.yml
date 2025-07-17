@@ -31,28 +31,15 @@ jobs:
       with:
         firefox-version: 'latest'
         
-    - name: Setup GeckoDriver
-      run: |
-        wget -q https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz
-        tar -xzf geckodriver-v0.33.0-linux64.tar.gz
-        sudo mv geckodriver /usr/local/bin/
-        sudo chmod +x /usr/local/bin/geckodriver
-        rm geckodriver-v0.33.0-linux64.tar.gz
-        
     - name: Création des dossiers nécessaires
       run: |
         mkdir -p Donnees_Temporaires
-        mkdir -p Drivers
         
-    - name: Copie du GeckoDriver
+    - name: Configuration pour Selenium Manager
       run: |
-        cp $(which geckodriver) Drivers/geckodriver
-        
-    - name: Configuration des chemins
-      run: |
-        echo 'FIREFOX_PATH = "$(which firefox)"' >> Scripts_Python/config.py
-        echo 'DRIVER_PATH = "./Drivers/geckodriver"' >> Scripts_Python/config.py
-        echo 'HEADLESS_MODE = True' >> Scripts_Python/config.py
+        # Utiliser Selenium Manager (automatique) au lieu de drivers manuels
+        sed -i 's|DRIVER_PATH = os.path.join(PROJECT_ROOT, "Drivers", "geckodriver.exe")|DRIVER_PATH = None  # Selenium Manager s\'en charge automatiquement|' Scripts_Python/config.py
+        sed -i 's|FIREFOX_PATH = r"C:\\Program Files\\Mozilla Firefox\\firefox.exe"|FIREFOX_PATH = "$(which firefox)"|' Scripts_Python/config.py
         
     - name: Exécution du scraper
       run: |
