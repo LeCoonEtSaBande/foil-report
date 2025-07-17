@@ -39,6 +39,7 @@ JS_WAIT_TIME = 0.5  # Temps d'attente pour le JavaScript
 #
 SITES = [
     72305,  # Le Grand Large à Lyon
+    193,    # Chasse sur Rhone
     314,    # Le Lac du Monteynard  
     179,    # Le Lac Leman
     # 67890,  # Autre site (exemple - décommentez pour ajouter)
@@ -93,6 +94,15 @@ SITE_CRITERIA = {
             "vent_moyen": 9,
             "vent_bien": 11,
             "vent_tres_bien": 15
+        }
+    },
+    # === SITE 72305 - Le Grand Large à Lyon ===
+    193: {
+        "toute_annee": {
+            "direction": [(140, 220],  # Nord-Ouest à Nord-Est OU Sud-Est à Sud-Ouest
+            "vent_moyen": 12,
+            "vent_bien": 15,
+            "vent_tres_bien": 18
         }
     }
     
