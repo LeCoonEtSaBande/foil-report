@@ -38,7 +38,7 @@ jobs:
     - name: Configuration pour Selenium Manager
       run: |
         # Utiliser Selenium Manager (automatique) au lieu de drivers manuels
-        sed -i 's|DRIVER_PATH = os.path.join(PROJECT_ROOT, "Drivers", "geckodriver.exe")|DRIVER_PATH = None  # Selenium Manager s\'en charge automatiquement|' Scripts_Python/config.py
+        sed -i 's|DRIVER_PATH = os.path.join(PROJECT_ROOT, "Drivers", "geckodriver.exe")|DRIVER_PATH = None  # Selenium Manager sen charge automatiquement|' Scripts_Python/config.py
         sed -i 's|FIREFOX_PATH = r"C:\\Program Files\\Mozilla Firefox\\firefox.exe"|FIREFOX_PATH = "$(which firefox)"|' Scripts_Python/config.py
         
     - name: Exécution du scraper
