@@ -317,11 +317,11 @@ def get_cloud_emojis(percentage_str: str, has_rain: bool = False, temperature: s
                 font_size = "16px"
                 top_offset = base_top_offset
             
-            clouds_html += f'<span style="position: absolute; top: {top_offset}px; left: {left_offset}px; font-size: {font_size};">{cloud_emoji}</span>'
+            clouds_html += f'<span class="cloud-symbol" style="position: absolute; top: {top_offset}px; left: {left_offset}px; font-size: {font_size};">{cloud_emoji}</span>'
         
         # Ajouter la goutte de pluie au milieu si nécessaire
         if has_rain and not has_snow:
-            clouds_html += f'<span style="position: absolute; top: 6px; left: 4px; font-size: 9px;">💧</span>'
+            clouds_html += f'<span class="cloud-symbol" style="position: absolute; top: 6px; left: 4px; font-size: 9px;">💧</span>'
         
         return f'<div style="position: relative; display: inline-block; width: 20px; height: 20px;">{clouds_html}</div>'
         
@@ -423,13 +423,13 @@ def calculate_note(site_id: int, vent: str, rafales: str, direction: str,
     if note == 0:
         return ""
     elif note == 1:
-        return '<div style="display: flex; flex-direction: column; align-items: center;">⭐</div>'
+        return '<div class="note-stars" style="display: flex; flex-direction: column; align-items: center; line-height: 0.8;">⭐</div>'
     elif note == 2:
-        return '<div style="display: flex; flex-direction: column; align-items: center;">⭐<br>⭐</div>'
+        return '<div class="note-stars" style="display: flex; flex-direction: column; align-items: center; line-height: 0.8;">⭐<br>⭐</div>'
     elif note == 3:
-        return '<div style="display: flex; flex-direction: column; align-items: center;">⭐<br>⭐<br>⭐</div>'
+        return '<div class="note-stars" style="display: flex; flex-direction: column; align-items: center; line-height: 0.8;">⭐<br>⭐<br>⭐</div>'
     else:
-        return '<div style="display: flex; flex-direction: column; align-items: center;">⭐<br>⭐<br>⭐</div>'  # Maximum 3 étoiles
+        return '<div class="note-stars" style="display: flex; flex-direction: column; align-items: center; line-height: 0.8;">⭐<br>⭐<br>⭐</div>'  # Maximum 3 étoiles
 
 
 def get_wind_color_progressive(site_id: int, wind_value: float, check_type: str = "vent") -> str:
@@ -620,6 +620,7 @@ class HTMLGenerator:
             aspect-ratio: 16/9;
             display: flex;
             flex-direction: column;
+            min-height: 100vh;
         }}
         
         .header {{
@@ -689,6 +690,9 @@ class HTMLGenerator:
             top: 0;
             z-index: 10;
             width: 25px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }}
         
         .data-table td {{
@@ -698,6 +702,9 @@ class HTMLGenerator:
             font-size: 0.9em;
             vertical-align: middle;
             width: 25px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }}
         
 
@@ -774,19 +781,144 @@ class HTMLGenerator:
                 margin: 5px;
                 border-radius: 10px;
                 max-width: 98vw;
+                aspect-ratio: auto;
+                min-height: 100vh;
+            }}
+            
+            .header {{
+                padding: 15px 20px;
             }}
             
             .header h1 {{
-                font-size: 1.5em;
+                font-size: 1.3em;
+            }}
+            
+            .content {{
+                padding: 10px;
+            }}
+            
+            .site-header {{
+                padding: 10px 15px;
+                flex-direction: column;
+                gap: 5px;
+            }}
+            
+            .site-header h2 {{
+                font-size: 1.1em;
+            }}
+            
+            .site-header .update-time {{
+                font-size: 0.8em;
+                text-align: center;
             }}
             
             .data-table {{
-                font-size: 0.7em;
+                font-size: 0.65em;
+                min-width: auto;
+                width: 100%;
             }}
             
             .data-table th,
             .data-table td {{
-                padding: 3px 1px;
+                padding: 2px 1px;
+                min-width: 20px;
+                max-width: 25px;
+                width: 20px;
+                font-size: 0.7em;
+                word-wrap: break-word;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }}
+            
+            .data-table td:first-child,
+            .data-table th:first-child {{
+                width: 80px;
+                min-width: 80px;
+                max-width: 80px;
+                font-size: 0.7em;
+            }}
+            
+            /* Réduire la taille des flèches de direction */
+            .wind-direction {{
+                font-size: 1em;
+            }}
+            
+            /* Réduire la taille des étoiles */
+            .note-stars {{
+                font-size: 0.9em;
+            }}
+            
+            /* Optimiser l'affichage des nuages */
+            .cloud-symbol {{
+                font-size: 0.8em;
+            }}
+        }}
+        
+        @media (max-width: 480px) {{
+            .container {{
+                margin: 2px;
+                border-radius: 8px;
+            }}
+            
+            .header {{
+                padding: 10px 15px;
+            }}
+            
+            .header h1 {{
+                font-size: 1.1em;
+            }}
+            
+            .content {{
+                padding: 5px;
+            }}
+            
+            .site-card {{
+                margin-bottom: 15px;
+            }}
+            
+            .site-header {{
+                padding: 8px 12px;
+            }}
+            
+            .site-header h2 {{
+                font-size: 1em;
+            }}
+            
+            .site-header .update-time {{
+                font-size: 0.7em;
+            }}
+            
+            .data-table {{
+                font-size: 0.6em;
+            }}
+            
+            .data-table th,
+            .data-table td {{
+                padding: 1px 1px;
+                min-width: 18px;
+                max-width: 22px;
+                width: 18px;
+                font-size: 0.65em;
+            }}
+            
+            .data-table td:first-child,
+            .data-table th:first-child {{
+                width: 70px;
+                min-width: 70px;
+                max-width: 70px;
+                font-size: 0.65em;
+            }}
+            
+            .wind-direction {{
+                font-size: 0.9em;
+            }}
+            
+            .note-stars {{
+                font-size: 0.8em;
+            }}
+            
+            .cloud-symbol {{
+                font-size: 0.7em;
             }}
         }}
     </style>
@@ -854,7 +986,7 @@ class HTMLGenerator:
                     <h2>📍 {site_name}</h2>
                     <span class="update-time">AROME: {update_time_arome} | WG: {update_time_wg}</span>
                 </div>
-                <div style="overflow-x: auto;">
+                <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
         """
         html += self._generate_merged_table_html(site_id, merged)
         html += """
@@ -1142,7 +1274,7 @@ class HTMLGenerator:
                 angle = float(d)
                 css_angle = angle + 180
                 color = "#32CD32" if direction_is_good[i] else "#222"
-                direction_html = f'<span style="transform: rotate({css_angle}deg); display: inline-block; font-size: 1.7em; color: {color};">↑</span>'
+                direction_html = f'<span class="wind-direction" style="transform: rotate({css_angle}deg); display: inline-block; font-size: 1.7em; color: {color};">↑</span>'
             except (ValueError, TypeError):
                 direction_html = d if d else ""
             direction_cells.append(direction_html)
