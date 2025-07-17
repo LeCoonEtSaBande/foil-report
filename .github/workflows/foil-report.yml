@@ -11,6 +11,10 @@ on:
 jobs:
   update-foil-report:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
     
     steps:
     - name: Checkout du repository
@@ -52,25 +56,50 @@ jobs:
         cd Scripts_Python
         python csv_to_html_viewer.py
         
-    - name: Création du fichier index.html
+    - name: Vérification des fichiers générés
+      run: |
+        echo "=== Fichiers générés ==="
+        ls -la ../Donnees_Temporaires/
+        echo "=== Contenu du rapport HTML ==="
+        head -20 ../Donnees_Temporaires/FR_*.html
+        
+    - name: Suppression des anciens fichiers HTML et création du nouveau index
       run: |
         cd Donnees_Temporaires
-        # Créer un fichier index.html qui redirige vers le rapport principal
-        cat > index.html << 'EOF'
+        
+        # Trouver le nouveau fichier HTML généré (créé par le script Python)
+        NEW_HTML_FILE=$(ls FR_*.html 2>/dev/null | head -1)
+        
+        if [ -n "$NEW_HTML_FILE" ]; then
+          echo "Nouveau fichier HTML trouvé: $NEW_HTML_FILE"
+          
+          # Supprimer les autres anciens fichiers HTML pour forcer le rechargement du cache
+          for old_file in FR_*.html; do
+            if [ "$old_file" != "$NEW_HTML_FILE" ]; then
+              echo "Suppression de l'ancien fichier: $old_file"
+              rm -f "$old_file"
+            fi
+          done
+          
+          # Créer un fichier index.html qui redirige vers le nouveau rapport
+          cat > index.html << EOF
         <!DOCTYPE html>
         <html lang="fr">
         <head>
             <meta charset="UTF-8">
-            <meta http-equiv="refresh" content="0; url=HTML_FROM_CSV.html">
+            <meta http-equiv="refresh" content="0; url=$NEW_HTML_FILE">
             <title>Foil Report - Redirection</title>
         </head>
         <body>
             <h1>Foil Report</h1>
             <p>Redirection vers le rapport météo...</p>
-            <p><a href="HTML_FROM_CSV.html">Cliquez ici si la redirection ne fonctionne pas</a></p>
+            <p><a href="$NEW_HTML_FILE">Cliquez ici si la redirection ne fonctionne pas</a></p>
         </body>
         </html>
         EOF
+        else
+          echo "Aucun fichier HTML FR_* trouvé"
+        fi
         
     - name: Upload des données CSV
       uses: actions/upload-artifact@v4
@@ -80,10 +109,14 @@ jobs:
         retention-days: 7
         
     - name: Déploiement sur GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
+      uses: peaceiris/actions-gh-pages@v4
       if: github.ref == 'refs/heads/main'
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./Donnees_Temporaires
         publish_branch: gh-pages
-        force_orphan: true 
+        force_orphan: true
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+        # Forcer le déploiement même si les fichiers sont identiques
+        commit_message: "Update Foil Report - $(date)" 
