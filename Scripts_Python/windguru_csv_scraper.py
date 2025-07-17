@@ -177,14 +177,13 @@ def scrape_site_in_tab(driver, site_id, tab_index, total_sites):
                     minute = int(minute)
                     
                     # Détecter automatiquement l'heure d'été
-                    import datetime
                     import os
                     
                     # Forcer le timezone à Europe/Paris pour GitHub Actions
                     os.environ['TZ'] = 'Europe/Paris'
-                    datetime.datetime.now().astimezone()  # Force la mise à jour du timezone
+                    datetime.now().astimezone()  # Force la mise à jour du timezone
                     
-                    now = datetime.datetime.now()
+                    now = datetime.now()
                     is_dst = now.astimezone().dst() != datetime.timedelta(0)
                     
                     # Convertir UTC vers heure locale (+2h en été, +1h en hiver)
