@@ -58,13 +58,10 @@ def extract_table_data(table, model_name, update_time):
         transform = g.get("transform", "")
         if transform and "rotate(" in transform:
             angle = transform.split("rotate(")[-1].split(",")[0]
-            if model_name == "AROME 1.3km":
-                try:
-                    corrected_angle = float(angle) - 180
-                    direction.append(str(int(corrected_angle)))
-                except ValueError:
-                    direction.append(angle)
-            else:
+            try:
+                corrected_angle = float(angle) - 180
+                direction.append(str(int(corrected_angle)))
+            except ValueError:
                 direction.append(angle)
         else:
             direction.append("")
