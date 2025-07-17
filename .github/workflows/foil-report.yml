@@ -32,9 +32,12 @@ jobs:
         firefox-version: 'latest'
         
     - name: Setup GeckoDriver
-      uses: nanasess/setup-geckodriver@v2
-      with:
-        geckodriver-version: 'v0.33.0'
+      run: |
+        wget -q https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz
+        tar -xzf geckodriver-v0.33.0-linux64.tar.gz
+        sudo mv geckodriver /usr/local/bin/
+        sudo chmod +x /usr/local/bin/geckodriver
+        rm geckodriver-v0.33.0-linux64.tar.gz
         
     - name: Création des dossiers nécessaires
       run: |
