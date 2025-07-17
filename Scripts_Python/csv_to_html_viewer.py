@@ -582,10 +582,12 @@ class HTMLGenerator:
     
     def generate_html(self) -> str:
         """Génère le contenu HTML complet."""
-        # Forcer le timezone à Europe/Paris pour avoir l'heure locale française
-        import os
-        os.environ['TZ'] = 'Europe/Paris'
-        current_time = datetime.now().strftime('%d/%m/%Y à %H:%M')
+        # Convertir l'heure UTC de GitHub en heure locale française
+        # GitHub affiche UTC mais dit que c'est CEST, donc on ajoute +2h en été
+        utc_now = datetime.now()
+        # En juillet, on est en heure d'été (CEST = UTC+2)
+        france_time = utc_now.replace(hour=(utc_now.hour + 2) % 24)
+        current_time = france_time.strftime('%d/%m/%Y à %H:%M')
         
         html = f"""
 <!DOCTYPE html>
