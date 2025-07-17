@@ -905,6 +905,8 @@ class HTMLGenerator:
             /* Réduire la taille des flèches de direction */
             .wind-direction {{
                 font-size: 1.2em;
+                font-weight: bold;
+                text-shadow: 0 0 1px currentColor;
             }}
             
             /* Réduire la taille des étoiles */
@@ -997,6 +999,8 @@ class HTMLGenerator:
             
             .wind-direction {{
                 font-size: 1.1em;
+                font-weight: bold;
+                text-shadow: 0 0 1px currentColor;
             }}
             
             .note-stars {{
