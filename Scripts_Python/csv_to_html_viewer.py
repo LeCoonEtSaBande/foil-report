@@ -1219,8 +1219,20 @@ def main() -> None:
     generator = HTMLGenerator(sorted_data)
     html_content = generator.generate_html()
     
-    # Sauvegarder le fichier HTML
-    html_file = os.path.join(CSV_FOLDER, f"HTML_FROM_CSV.html")
+    # Supprimer les anciens fichiers HTML pour forcer le rechargement du cache
+    for old_file in glob.glob(os.path.join(CSV_FOLDER, "FR_*.html")):
+        try:
+            os.remove(old_file)
+            logger.info(f"Ancien fichier HTML supprimé: {os.path.basename(old_file)}")
+        except Exception as e:
+            logger.warning(f"Impossible de supprimer l'ancien fichier {os.path.basename(old_file)}: {str(e)}")
+    
+    # Générer le nom du fichier avec la date et l'heure
+    now = datetime.now()
+    date_str = now.strftime("%Y%m%d")
+    time_str = now.strftime("%H%M")
+    html_filename = f"FR_{date_str}_{time_str}.html"
+    html_file = os.path.join(CSV_FOLDER, html_filename)
     
     try:
         with open(html_file, 'w', encoding='utf-8') as f:
