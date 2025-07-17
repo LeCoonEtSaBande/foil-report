@@ -35,9 +35,14 @@ jobs:
       with:
         firefox-version: 'latest'
         
-    - name: Création des dossiers nécessaires
+    - name: Création des dossiers nécessaires et nettoyage
       run: |
         mkdir -p Donnees_Temporaires
+        # Supprimer les anciens fichiers CSV et HTML pour éviter l'accumulation
+        rm -f Donnees_Temporaires/Donnees_WG_*.csv
+        rm -f Donnees_Temporaires/FR_*.html
+        rm -f Donnees_Temporaires/HTML_FROM_CSV.html
+        echo "Anciens fichiers supprimés"
         
     - name: Configuration pour Selenium Manager
       run: |
@@ -59,9 +64,9 @@ jobs:
     - name: Vérification des fichiers générés
       run: |
         echo "=== Fichiers générés ==="
-        ls -la ../Donnees_Temporaires/
+        ls -la Donnees_Temporaires/
         echo "=== Contenu du rapport HTML ==="
-        head -20 ../Donnees_Temporaires/FR_*.html
+        head -20 Donnees_Temporaires/FR_*.html
         
     - name: Suppression des anciens fichiers HTML et création du nouveau index
       run: |
