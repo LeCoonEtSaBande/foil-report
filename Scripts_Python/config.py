@@ -99,7 +99,7 @@ SITE_CRITERIA = {
     # === SITE 72305 - Le Grand Large à Lyon ===
     193: {
         "toute_annee": {
-            "direction": [(140, 220],  # Nord-Ouest à Nord-Est OU Sud-Est à Sud-Ouest
+            "direction": [(140, 220)],  # Nord-Ouest à Nord-Est OU Sud-Est à Sud-Ouest
             "vent_moyen": 12,
             "vent_bien": 15,
             "vent_tres_bien": 18
