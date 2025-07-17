@@ -26,10 +26,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         
-    - name: Installation de Firefox
+    - name: Installation de Firefox (mode headless)
       run: |
         sudo apt-get update
-        sudo apt-get install -y firefox
+        sudo apt-get install -y firefox-esr || sudo apt-get install -y firefox || echo "Firefox installation skipped - using headless mode"
         
     - name: Téléchargement de GeckoDriver
       run: |
@@ -37,6 +37,7 @@ jobs:
         tar -xzf geckodriver-v0.33.0-linux64.tar.gz
         sudo mv geckodriver /usr/local/bin/
         sudo chmod +x /usr/local/bin/geckodriver
+        geckodriver --version
         
     - name: Création des dossiers nécessaires
       run: |
@@ -51,10 +52,12 @@ jobs:
       run: |
         echo "FIREFOX_PATH=/usr/bin/firefox" >> Scripts_Python/config.py
         echo "DRIVER_PATH=./Drivers/geckodriver" >> Scripts_Python/config.py
+        echo "HEADLESS_MODE=True" >> Scripts_Python/config.py
         
     - name: Exécution du scraper
       run: |
         cd Scripts_Python
+        python -c "import selenium; print('Selenium version:', selenium.__version__)"
         python windguru_csv_scraper.py
         
     - name: Génération du rapport HTML
