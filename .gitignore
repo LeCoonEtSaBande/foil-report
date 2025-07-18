@@ -1,12 +1,17 @@
-# Données temporaires
+# === Données temporaires du projet ===
+# Dossier principal des données générées
 Donnees_Temporaires/
+
+# Fichiers CSV générés par le scraper
 *.csv
+
+# Fichiers HTML générés par le visualiseur
 *.html
 
-# Logs
+# === Logs ===
 *.log
 
-# Python
+# === Python ===
 __pycache__/
 *.py[cod]
 *$py.class
@@ -28,21 +33,31 @@ wheels/
 .installed.cfg
 *.egg
 
-# Environnements virtuels
+# === Environnements virtuels ===
 venv/
 env/
 ENV/
+.venv/
 
-# IDE
+# === IDE ===
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
-# OS
+# === OS ===
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# Firefox/GeckoDriver (pour éviter les conflits)
+# === Navigateurs/Drivers ===
+# Firefox et GeckoDriver (éviter les conflits entre systèmes)
 geckodriver*
 firefox*
+chromedriver*
+*.exe
+
+# === Fichiers temporaires ===
+*.tmp
+*.temp 
