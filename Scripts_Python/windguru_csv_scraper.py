@@ -1,3 +1,28 @@
+"""
+Windguru CSV Scraper - Extracteur de données météorologiques Windguru
+
+Ce script scrape les données météorologiques de Windguru pour les sites configurés
+et les sauvegarde au format CSV. Il utilise Selenium avec Firefox pour extraire
+les données des modèles AROME et WG (WeatherGuru).
+
+FONCTIONNALITÉS PRINCIPALES :
+- Scraping parallèle avec onglets multiples
+- Extraction des données AROME et WG
+- Gestion des timezones (GitHub Actions + local)
+- Sauvegarde au format CSV européen
+- Logging détaillé des opérations
+
+ARCHITECTURE :
+- Scraping parallèle avec ThreadPoolExecutor
+- Extraction des tables HTML avec BeautifulSoup
+- Gestion centralisée des dates/heures
+- Synchronisation des threads avec verrous
+
+Auteur: [Votre nom]
+Version: 2.0.0
+Date: 2024
+"""
+
 import os
 import time
 import csv
@@ -37,7 +62,25 @@ options.add_argument("--disable-web-security")
 options.add_argument("--disable-features=VizDisplayCompositor")
 
 def extract_table_data(table, model_name, update_time):
-    """Extrait les données d'une table de prévisions"""
+    """
+    Extrait les données d'une table de prévisions Windguru.
+    
+    Cette fonction parse une table HTML de Windguru et extrait :
+    - Heures de prévision
+    - Vitesse du vent et rafales
+    - Direction du vent (avec correction d'angle)
+    - Température
+    - Couverture nuageuse (3 niveaux)
+    - Précipitations
+    
+    ARGUMENTS :
+    - table : Objet BeautifulSoup de la table
+    - model_name : Nom du modèle (AROME/WG)
+    - update_time : Heure de mise à jour
+    
+    RETOURNE :
+    - Dict structuré avec toutes les données ou None si erreur
+    """
     if not table or not isinstance(table, Tag):
         return None
     
@@ -54,13 +97,14 @@ def extract_table_data(table, model_name, update_time):
     rafales = [td.text.strip() for td in rows[2].find_all("td")]
     
     # Extraction de la direction avec correction pour AROME
+    # Les flèches SVG sont orientées différemment selon le modèle
     direction = []
     for g in rows[3].find_all("g"):
         transform = g.get("transform", "")
         if transform and "rotate(" in transform:
             angle = transform.split("rotate(")[-1].split(",")[0]
             try:
-                corrected_angle = float(angle) - 180
+                corrected_angle = float(angle) - 180  # Correction d'orientation
                 direction.append(str(int(corrected_angle)))
             except ValueError:
                 direction.append(angle)
@@ -72,6 +116,7 @@ def extract_table_data(table, model_name, update_time):
     cloud_cells = rows[5].find_all("td")
     nuages_haut, nuages_moyen, nuages_bas = [], [], []
     
+    # Extraction des 3 niveaux de nuages (haut, moyen, bas)
     for td in cloud_cells:
         divs = td.find_all("div", class_="clouds")
         v_haut = divs[0].get_text(strip=True) if len(divs) > 0 else ""
@@ -98,7 +143,17 @@ def extract_table_data(table, model_name, update_time):
     }
 
 def write_model_data_to_csv(writer, model_data, max_cols):
-    """Écrit les données d'un modèle dans le CSV"""
+    """
+    Écrit les données d'un modèle dans le fichier CSV.
+    
+    Cette fonction formate et écrit les données météo dans le CSV
+    avec le format standard : en-tête + valeurs par colonne.
+    
+    ARGUMENTS :
+    - writer : Writer CSV
+    - model_data : Données du modèle à écrire
+    - max_cols : Nombre maximum de colonnes pour l'alignement
+    """
     if not model_data:
         # Si pas de données, écrire des lignes vides
         writer.writerow(["Modele", model_data.get("model", "Inconnu")] + [""] * (max_cols - 1))
@@ -125,7 +180,21 @@ def write_model_data_to_csv(writer, model_data, max_cols):
     writer.writerow(["Note Windguru"] + [""] * (max_cols - 1))
 
 def scrape_site_in_tab(driver, site_id, tab_index, total_sites):
-    """Scrape un site dans un onglet spécifique avec synchronisation"""
+    """
+    Scrape un site dans un onglet spécifique avec synchronisation.
+    
+    Cette fonction gère le scraping d'un site dans un onglet dédié
+    avec gestion des erreurs et logging détaillé.
+    
+    ARGUMENTS :
+    - driver : Instance WebDriver Firefox
+    - site_id : ID du site Windguru
+    - tab_index : Index de l'onglet (0-based)
+    - total_sites : Nombre total de sites pour le logging
+    
+    RETOURNE :
+    - Tuple (site_id, wg_data, arome_data, site_name)
+    """
     logger = get_logger()
     current_site = tab_index + 1
     
@@ -225,7 +294,15 @@ def scrape_site_in_tab(driver, site_id, tab_index, total_sites):
         return site_id, None, None, f"Site {site_id}"
 
 def scrape_windguru_parallel():
-    """Scrape tous les sites en parallèle avec des onglets"""
+    """
+    Scrape tous les sites en parallèle avec des onglets.
+    
+    Cette fonction orchestre le scraping parallèle en créant
+    un onglet par site et en lançant les threads de scraping.
+    
+    RETOURNE :
+    - Dict des résultats par site_id
+    """
     logger = get_logger()
     
     # Utiliser Selenium Manager si DRIVER_PATH est None, sinon utiliser le chemin spécifié
@@ -268,7 +345,18 @@ def scrape_windguru_parallel():
         driver.quit()
 
 def save_to_csv_raw(site_id, wg_data, arome_data=None, site_name=""):
-    """Sauvegarde les données brutes dans un fichier CSV"""
+    """
+    Sauvegarde les données brutes dans un fichier CSV.
+    
+    Cette fonction crée un fichier CSV structuré avec les données
+    des modèles AROME et WG pour un site donné.
+    
+    ARGUMENTS :
+    - site_id : ID du site Windguru
+    - wg_data : Données du modèle WG
+    - arome_data : Données du modèle AROME (optionnel)
+    - site_name : Nom du site
+    """
     logger = get_logger()
     filename = os.path.join(CSV_FOLDER, f"Donnees_WG_{site_id}.csv")
     
@@ -298,7 +386,16 @@ def save_to_csv_raw(site_id, wg_data, arome_data=None, site_name=""):
     logger.file_saved(os.path.basename(filename))
 
 def main():
-    """Fonction principale avec parallélisation"""
+    """
+    Fonction principale avec parallélisation.
+    
+    Cette fonction orchestre l'ensemble du processus de scraping :
+    1. Initialisation du logging
+    2. Affichage de l'heure locale
+    3. Scraping parallèle des sites
+    4. Sauvegarde des résultats en CSV
+    5. Logging des statistiques finales
+    """
     total_sites = len(SITES)
     logger = init_logger(total_sites)
     
