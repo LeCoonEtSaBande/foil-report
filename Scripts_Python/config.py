@@ -39,10 +39,8 @@ JS_WAIT_TIME = 0.5  # Temps d'attente pour le JavaScript
 #
 SITES = [
     72305,  # Le Grand Large à Lyon
-    193,    # Chasse sur Rhone
     314,    # Le Lac du Monteynard  
     179,    # Le Lac Leman
-    # 67890,  # Autre site (exemple - décommentez pour ajouter)
 ]
 
 # === CRITÈRES DE VENT PAR SITE ===
@@ -53,68 +51,30 @@ SITES = [
 # - "vent_bien" : seuil pour considérer le vent comme "bon"
 # - "vent_tres_bien" : seuil pour considérer le vent comme "très bon"
 #
-# Périodes saisonnières :
-# - "toute_annee" : critères valables toute l'année
-# - "juin_aout" : critères pour juin-août
-# - "septembre_mai" : critères pour septembre-mai
-# - "juin_septembre" : critères pour juin-septembre
-# - "octobre_mai" : critères pour octobre-mai
-#
 SITE_CRITERIA = {
     # === SITE 179 - Le Lac Leman ===
     179: {
-        "toute_annee": {
-            "direction": [(320, 40)],  # Nord-Ouest à Nord-Est
-            "vent_moyen": 14,           # 14 nœuds minimum
-            "vent_bien": 17,            # 17 nœuds pour "bon"
-            "vent_tres_bien": 20        # 20 nœuds pour "très bon"
-        },
+        "direction": [(320, 40)],  # Nord-Ouest à Nord-Est
+        "vent_moyen": 14,           # 14 nœuds minimum
+        "vent_bien": 17,            # 17 nœuds pour "bon"
+        "vent_tres_bien": 20        # 20 nœuds pour "très bon"
     },
     
     # === SITE 314 - Le Lac du Monteynard ===
     314: {
-        "octobre_mai": {  # Octobre à mai
-            "direction": [(320, 40), (140, 220)],  # Nord-Ouest à Nord-Est OU Sud-Est à Sud-Ouest
-            "vent_moyen": 12,
-            "vent_bien": 15,
-            "vent_tres_bien": 18
-        },
-        "juin_septembre": {  # Juin à septembre
-            "direction": [(320, 40)],  # Nord-Ouest à Nord-Est seulement
-            "vent_moyen": 9,
-            "vent_bien": 12,
-            "vent_tres_bien": 15
-        }
+        "direction": [(320, 40), (140, 220)],  # Nord-Ouest à Nord-Est OU Sud-Est à Sud-Ouest
+        "vent_moyen": 12,
+        "vent_bien": 15,
+        "vent_tres_bien": 18
     },
     
     # === SITE 72305 - Le Grand Large à Lyon ===
     72305: {
-        "toute_annee": {
-            "direction": [(320, 40), (140, 220)],  # Nord-Ouest à Nord-Est OU Sud-Est à Sud-Ouest
-            "vent_moyen": 9,
-            "vent_bien": 11,
-            "vent_tres_bien": 15
-        }
-    },
-    # === SITE 72305 - Le Grand Large à Lyon ===
-    193: {
-        "toute_annee": {
-            "direction": [(140, 220)],  # Nord-Ouest à Nord-Est OU Sud-Est à Sud-Ouest
-            "vent_moyen": 12,
-            "vent_bien": 15,
-            "vent_tres_bien": 18
-        }
+        "direction": [(320, 40), (140, 220)],  # Nord-Ouest à Nord-Est OU Sud-Est à Sud-Ouest
+        "vent_moyen": 9,
+        "vent_bien": 11,
+        "vent_tres_bien": 15
     }
-    
-    # === EXEMPLE POUR AJOUTER UN NOUVEAU SITE ===
-    # 67890: {
-    #     "toute_annee": {
-    #         "direction": [(315, 45)],  # Nord-Ouest à Nord-Est
-    #         "vent_moyen": 10,
-    #         "vent_bien": 13,
-    #         "vent_tres_bien": 16
-    #     }
-    # }
 }
 
 # === Format des fichiers CSV ===
