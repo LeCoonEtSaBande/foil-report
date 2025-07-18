@@ -43,7 +43,7 @@ SITES = [
     314,    # Le Lac du Monteynard
     28061,  # Le Lac du Bourget
     179,    # Le Lac Leman
-    14,     # L'Almanarre
+    14     # L'Almanarre
 ]
 
 # === CRITÈRES DE VENT PAR SITE ===
@@ -96,7 +96,7 @@ SITE_CRITERIA = {
         "vent_moyen": 9,
         "vent_bien": 11,
         "vent_tres_bien": 15
-    },
+    }
 }
 
 # === Format des fichiers CSV ===
