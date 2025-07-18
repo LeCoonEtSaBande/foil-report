@@ -4,6 +4,20 @@ CSV to HTML Viewer - Visualiseur de données Windguru pour Foil Report
 Ce script lit les fichiers CSV générés par le scraper et crée une page HTML
 interactive pour visualiser les données météorologiques dans Firefox.
 
+FONCTIONNALITÉS PRINCIPALES :
+- Lecture et parsing des fichiers CSV Windguru
+- Fusion des données AROME et WG (WeatherGuru)
+- Génération d'une page HTML responsive avec couleurs progressives
+- Calcul automatique des notes selon les critères de vent
+- Affichage des directions avec flèches rotatives
+- Visualisation des nuages avec emojis superposés
+- Échelle de température avec couleurs progressives
+
+ARCHITECTURE :
+- CSVDataReader : Lecture et parsing des fichiers CSV
+- HTMLGenerator : Génération de la page HTML
+- Fonctions utilitaires : Calculs de couleurs, notes, directions
+
 Auteur: [Votre nom]
 Version: 2.0.0
 Date: 2024
@@ -25,14 +39,36 @@ from config import SITE_CRITERIA
 
 
 class CSVDataReader:
-    """Classe pour lire et parser les fichiers CSV de Windguru."""
+    """
+    Classe pour lire et parser les fichiers CSV de Windguru.
+    
+    Cette classe gère la lecture des fichiers CSV générés par le scraper Windguru
+    et les transforme en structures de données utilisables par le générateur HTML.
+    
+    ATTRIBUTS :
+    - csv_folder : Chemin vers le dossier contenant les fichiers CSV
+    - data : Dictionnaire des données parsées par site_id
+    """
     
     def __init__(self, csv_folder: str):
         self.csv_folder = csv_folder
         self.data = {}
     
     def read_csv_file(self, filename: str) -> Optional[Dict]:
-        """Lit un fichier CSV et retourne les données structurées."""
+        """
+        Lit un fichier CSV et retourne les données structurées.
+        
+        Cette méthode parse un fichier CSV Windguru et extrait :
+        - Informations du site (ID, nom)
+        - Données météo par modèle (AROME, WG)
+        - Heures, vent, rafales, direction, température, nuages, précipitations
+        
+        ARGUMENTS :
+        - filename : Nom du fichier CSV à lire
+        
+        RETOURNE :
+        - Dict structuré avec les données ou None si erreur
+        """
         logger = get_logger()
         filepath = os.path.join(self.csv_folder, filename)
         
@@ -113,7 +149,7 @@ class CSVDataReader:
             
             return data
             
-        except Exception as e:
+        except Exception:
             return None
     
     def read_all_csv_files(self) -> Dict:
@@ -137,8 +173,21 @@ class CSVDataReader:
 def merge_models(site_data: dict) -> dict:
     """
     Fusionne les données AROME et WG pour un site.
-    Les heures sont en colonnes, sans doublons.
-    On prend d'abord AROME, puis on complète avec WG.
+    
+    Cette fonction combine les données des deux modèles météo :
+    - AROME 1.3km : Modèle haute résolution français
+    - WG (WeatherGuru) : Modèle global
+    
+    STRATÉGIE DE FUSION :
+    - Priorité à AROME pour les heures disponibles
+    - Complément avec WG pour les heures manquantes
+    - Élimination des doublons d'heures
+    
+    ARGUMENTS :
+    - site_data : Données brutes du site avec modèles séparés
+    
+    RETOURNE :
+    - Dict fusionné avec toutes les heures et données combinées
     """
     models = site_data.get('models', {})
     arome = models.get('AROME 1.3km', {})
@@ -159,7 +208,7 @@ def merge_models(site_data: dict) -> dict:
         vals_arome = arome.get(field, [])
         vals_wg = wg.get(field, [])
         res = []
-        for i, h in enumerate(heures):
+        for h in heures:
             if h in heures_arome:
                 idx = heures_arome.index(h)
                 v = vals_arome[idx] if idx < len(vals_arome) else ''
@@ -196,7 +245,18 @@ def merge_models(site_data: dict) -> dict:
 
 
 def get_jour_complet(abreviation: str) -> str:
-    """Convertit une abréviation de jour en nom complet français"""
+    """
+    Convertit une abréviation de jour en nom complet français.
+    
+    Cette fonction traduit les abréviations de jours (Lu, Ma, Me, etc.)
+    en noms complets français (Lundi, Mardi, Mercredi, etc.).
+    
+    ARGUMENTS :
+    - abreviation : Abréviation du jour (ex: "Lu", "Ma", "We")
+    
+    RETOURNE :
+    - Nom complet français ou l'abréviation si non reconnue
+    """
     jours = {
         'Lu': 'Lundi',
         'Ma': 'Mardi', 
@@ -205,19 +265,32 @@ def get_jour_complet(abreviation: str) -> str:
         'Ve': 'Vendredi',
         'Sa': 'Samedi',
         'Di': 'Dimanche',
+        'Mo': 'Lundi',
+        'Tu': 'Mardi',
+        'We': 'Mercredi',
         'Th': 'Jeudi',
         'Fr': 'Vendredi',
         'Sa': 'Samedi',
-        'Su': 'Dimanche',
-        'Mo': 'Lundi',
-        'Tu': 'Mardi',
-        'We': 'Mercredi'
+        'Su': 'Dimanche'
     }
     return jours.get(abreviation, abreviation)
 
 
 def parse_heure(heure_str: str) -> Tuple[str, str]:
-    """Extrait le jour et l'heure d'une chaîne comme 'Lu14.03h' et convertit en français"""
+    """
+    Extrait le jour et l'heure d'une chaîne comme 'Lu14.03h' et convertit en français.
+    
+    Cette fonction parse les chaînes d'heure Windguru qui contiennent :
+    - Abréviation du jour (Lu, Ma, Me, etc.)
+    - Date du mois (14)
+    - Heure (03)
+    
+    ARGUMENTS :
+    - heure_str : Chaîne d'heure au format "Lu14.03h"
+    
+    RETOURNE :
+    - Tuple (jour_complet, heure) : ("Lundi 14", "3")
+    """
     if not heure_str:
         return "", ""
     
@@ -235,22 +308,23 @@ def parse_heure(heure_str: str) -> Tuple[str, str]:
     else:
         return heure_str, ""
 
-
-def get_jour_from_heure(heure_str: str) -> str:
-    """Extrait le jour complet d'une heure en français"""
-    if not heure_str:
-        return ""
-    match = re.match(r'([A-Za-z]+)(\d+)\.(\d+)h', heure_str)
-    if match:
-        jour = match.group(1)
-        date = match.group(2)
-        jour_fr = get_jour_complet(jour)
-        return f"{jour_fr} {date}"
-    return ""
-
-
 def is_night_time(heure_str: str) -> bool:
-    """Détermine si c'est la nuit (20h-7h30)"""
+    """
+    Détermine si c'est la nuit (20h-7h30).
+    
+    Cette fonction identifie les périodes nocturnes pour l'affichage
+    des couleurs de fond dans le tableau HTML.
+    
+    PÉRIODES NOCTURNES :
+    - 20h00 à 23h59
+    - 00h00 à 07h30
+    
+    ARGUMENTS :
+    - heure_str : Chaîne d'heure au format "Lu14.03h"
+    
+    RETOURNE :
+    - True si c'est la nuit, False sinon
+    """
     if not heure_str:
         return False
     
@@ -262,7 +336,29 @@ def is_night_time(heure_str: str) -> bool:
 
 
 def get_cloud_emojis(percentage_str: str, has_rain: bool = False, temperature: str = "") -> str:
-    """Retourne les emojis de nuages selon le pourcentage, la présence de pluie et la température"""
+    """
+    Retourne les emojis de nuages selon le pourcentage, la présence de pluie et la température.
+    
+    Cette fonction génère une représentation visuelle des nuages avec :
+    - Nombre de nuages selon le pourcentage de couverture
+    - Gouttes de pluie si précipitations > 0
+    - Flocons de neige si température < 2°C
+    
+    ÉCHELLE DE NUAGES :
+    - 0-5% : Aucun nuage
+    - 6-25% : 1 nuage
+    - 26-50% : 2 nuages
+    - 51-75% : 3 nuages
+    - 76-100% : 4 nuages
+    
+    ARGUMENTS :
+    - percentage_str : Pourcentage de couverture nuageuse
+    - has_rain : True si précipitations > 0
+    - temperature : Température pour déterminer neige/pluie
+    
+    RETOURNE :
+    - HTML avec emojis de nuages superposés
+    """
     if not percentage_str:
         return ""
     
@@ -330,43 +426,85 @@ def get_cloud_emojis(percentage_str: str, has_rain: bool = False, temperature: s
 
 
 def get_criteria_for_site_and_date(site_id: int, date_str: str) -> Optional[Dict]:
-    """Retourne les critères appropriés pour un site et une date"""
+    """
+    Retourne les critères appropriés pour un site.
+    
+    Cette fonction récupère les critères de vent définis dans config.py
+    pour un site donné. Les critères incluent :
+    - Directions favorables
+    - Seuils de vent (moyen, bien, très bien)
+    
+    ARGUMENTS :
+    - site_id : ID du site Windguru
+    - date_str : Date (non utilisée depuis simplification)
+    
+    RETOURNE :
+    - Dict des critères ou None si site non trouvé
+    """
     if site_id not in SITE_CRITERIA:
         return None
     
-    # Utiliser le mois actuel du système
-    current_month = datetime.now().month
-    
-    site_criteria = SITE_CRITERIA[site_id]
-    
-    if site_id == 179:
-        if current_month in [6, 7, 8]:  # Juin à août
-            return site_criteria.get("juin_aout")
-        else:  # Septembre à mai
-            return site_criteria.get("septembre_mai")
-    
-    elif site_id == 314:
-        if current_month in [6, 7, 8, 9]:  # Juin à septembre
-            return site_criteria.get("juin_septembre")
-        else:  # Octobre à mai
-            return site_criteria.get("octobre_mai")
-    
-    elif site_id == 72305:
-        return site_criteria.get("toute_annee")
-    
-    return None
+    return SITE_CRITERIA[site_id]
 
+
+def is_direction_favorable(site_id: int, direction_val: float, jour_str: str) -> bool:
+    """
+    Vérifie si la direction du vent est favorable pour un site donné.
+    
+    Cette fonction compare la direction du vent aux plages favorables
+    définies dans les critères du site. Gère les cas où la plage
+    traverse 0° (ex: 315°-45°).
+    
+    ARGUMENTS :
+    - site_id : ID du site Windguru
+    - direction_val : Direction du vent en degrés (0-360)
+    - jour_str : Jour (non utilisé depuis simplification)
+    
+    RETOURNE :
+    - True si direction favorable, False sinon
+    """
+    criteria = get_criteria_for_site_and_date(site_id, jour_str)
+    if not criteria:
+        return False
+    
+    # Code normal pour les autres sites
+    for dir_min, dir_max in criteria["direction"]:
+        if dir_min <= dir_max:  # Cas normal (ex: 135-225)
+            if dir_min <= direction_val <= dir_max:
+                return True
+        else:  # Cas qui traverse 0° (ex: 315-45)
+            if direction_val >= dir_min or direction_val <= dir_max:
+                return True
+    
+    return False
 
 def calculate_note(site_id: int, vent: str, rafales: str, direction: str, 
                    jour_str: str, heure_str: str, pluie: str, temp: str) -> str:
     """
     Calcule la note avec étoiles selon la formule : Note = A x B x C x D x E
     
+    Cette fonction évalue la qualité des conditions de foil selon :
+    
     A = note vent (1, 2, ou 3 selon les seuils)
     B = direction favorable (1 ou 0)
     C = période jour (1 ou 0)
     D = pas de précipitations (1 ou 0)
     E = température > 5°C (1 ou 0)
+    
+    LOGIQUE DE NOTE VENT :
+    - 3 étoiles : vent >= très_bien OU (vent >= bien ET rafales >= très_bien)
+    - 2 étoiles : vent >= bien ET rafales >= très_bien
+    - 1 étoile : vent >= moyen ET rafales > bien
+    - 0 étoile : conditions non remplies
+    
+    ARGUMENTS :
+    - site_id : ID du site Windguru
+    - vent, rafales, direction : Données météo
+    - jour_str, heure_str : Informations temporelles
+    - pluie, temp : Précipitations et température
+    
+    RETOURNE :
+    - HTML avec étoiles empilées verticalement
     """
     criteria = get_criteria_for_site_and_date(site_id, jour_str)
     if not criteria:
@@ -396,16 +534,7 @@ def calculate_note(site_id: int, vent: str, rafales: str, direction: str,
         A = 0
     
     # B - Direction favorable
-    B = 0
-    for dir_min, dir_max in criteria["direction"]:
-        if dir_min <= dir_max:  # Cas normal (ex: 135-225)
-            if dir_min <= direction_val <= dir_max:
-                B = 1
-                break
-        else:  # Cas qui traverse 0° (ex: 315-45)
-            if direction_val >= dir_min or direction_val <= dir_max:
-                B = 1
-                break
+    B = 1 if is_direction_favorable(site_id, direction_val, jour_str) else 0
     
     # C - Période jour
     C = 1 if not is_night_time(heure_str) else 0
@@ -434,15 +563,26 @@ def calculate_note(site_id: int, vent: str, rafales: str, direction: str,
 
 def get_wind_color_progressive(site_id: int, wind_value: float, check_type: str = "vent") -> str:
     """
-    Calcule la couleur progressive pour le vent selon la nouvelle échelle :
-    - 2 nœuds avant moyen : bleu très clair
-    - Moyen : bleu clair
-    - De moyen à bien : progressivement vert
-    - Bien : vert
-    - De bien à très bien : progressivement orange
-    - Très bien : orange
-    - Puis progressivement rouge
-    - +10 nœuds par rapport à bien : rouge et reste rouge
+    Calcule la couleur progressive pour le vent selon l'échelle définie.
+    
+    Cette fonction génère des couleurs de fond progressives pour visualiser
+    l'intensité du vent selon les seuils définis dans config.py.
+    
+    ÉCHELLE DE COULEURS :
+    - < (moyen-2) : Pas de couleur
+    - (moyen-2) à moyen : Bleu très clair → bleu clair
+    - Moyen à bien : Bleu clair → vert
+    - Bien à très bien : Vert → orange
+    - Très bien à (bien+10) : Orange → rouge
+    - > (bien+10) : Rouge fixe
+    
+    ARGUMENTS :
+    - site_id : ID du site pour récupérer les seuils
+    - wind_value : Valeur du vent en nœuds
+    - check_type : Type de vérification (vent/rafales/both)
+    
+    RETOURNE :
+    - Style CSS background-color avec couleur progressive
     """
     criteria = get_criteria_for_site_and_date(site_id, "")
     if not criteria:
@@ -505,8 +645,32 @@ def get_wind_color_progressive(site_id: int, wind_value: float, check_type: str 
 def get_wind_background_class(site_id: int, vent: str, rafales: str, direction: str, 
                              jour_str: str, heure_str: str, pluie: str, check_type: str = "both") -> str:
     """
-    Détermine la classe CSS pour le fond selon les conditions de vent
-    check_type: "vent", "rafales", "direction", ou "both"
+    Détermine la classe CSS pour le fond selon les conditions de vent.
+    
+    Cette fonction orchestratrice combine la vérification de direction
+    et le calcul de couleur progressive. Elle gère la logique métier
+    complète pour l'affichage des couleurs de fond.
+    
+    LOGIQUE :
+    1. Vérifie si la direction est favorable
+    2. Si oui, calcule la couleur selon le type demandé
+    3. Si non, retourne chaîne vide
+    
+    TYPES DE VÉRIFICATION :
+    - "vent" : Couleur basée sur la vitesse du vent
+    - "rafales" : Couleur basée sur les rafales
+    - "direction" : Couleur verte si direction favorable
+    - "both" : Couleur basée sur la moyenne vent/rafales
+    
+    ARGUMENTS :
+    - site_id : ID du site Windguru
+    - vent, rafales, direction : Données météo
+    - jour_str, heure_str : Informations temporelles
+    - pluie : Précipitations (non utilisée)
+    - check_type : Type de vérification
+    
+    RETOURNE :
+    - Style CSS background-color ou chaîne vide
     """
     criteria = get_criteria_for_site_and_date(site_id, jour_str)
     if not criteria:
@@ -520,18 +684,7 @@ def get_wind_background_class(site_id: int, vent: str, rafales: str, direction: 
         return ""
     
     # Vérifier la direction
-    direction_ok = False
-    for dir_min, dir_max in criteria["direction"]:
-        if dir_min <= dir_max:  # Cas normal (ex: 135-225)
-            if direction_val >= dir_min or direction_val <= dir_max:
-                direction_ok = True
-                break
-        else:  # Cas qui traverse 0° (ex: 315-45)
-            if direction_val >= dir_min or direction_val <= dir_max:
-                direction_ok = True
-                break
-    
-    if not direction_ok:
+    if not is_direction_favorable(site_id, direction_val, jour_str):
         return ""
     
     # Utiliser la nouvelle échelle de couleur progressive
@@ -549,7 +702,27 @@ def get_wind_background_class(site_id: int, vent: str, rafales: str, direction: 
 
 
 def get_temperature_color(temp_str: str) -> str:
-    """Retourne la couleur de la température selon l'échelle définie"""
+    """
+    Retourne la couleur de la température selon l'échelle définie.
+    
+    Cette fonction génère des couleurs de texte pour visualiser
+    la température selon une échelle thermique intuitive.
+    
+    ÉCHELLE DE TEMPÉRATURE :
+    - < 1°C : Violet (#8B008B)
+    - 1-10°C : Bleu (#0000FF)
+    - 10-20°C : Bleu clair (#87CEEB)
+    - 20-25°C : Vert (#32CD32)
+    - 25-30°C : Orange (#FFA500)
+    - 30-35°C : Orange foncé (#FF8C00)
+    - > 35°C : Rouge (#FF0000)
+    
+    ARGUMENTS :
+    - temp_str : Température en string
+    
+    RETOURNE :
+    - Couleur hexadécimale ou noir par défaut
+    """
     if not temp_str:
         return "#000000"  # Noir par défaut
     
@@ -575,19 +748,68 @@ def get_temperature_color(temp_str: str) -> str:
 
 
 class HTMLGenerator:
-    """Classe pour générer la page HTML de visualisation."""
+    """
+    Classe pour générer la page HTML de visualisation.
+    
+    Cette classe gère la génération complète de la page HTML
+    avec toutes les fonctionnalités de visualisation :
+    - Tableaux responsifs avec scroll horizontal
+    - Couleurs progressives pour vent/rafales
+    - Flèches de direction rotatives
+    - Emojis de nuages superposés
+    - Notes avec étoiles
+    - Échelle de température colorée
+    
+    ATTRIBUTS :
+    - data : Dictionnaire des données parsées par site_id
+    """
     
     def __init__(self, data: Dict):
         self.data = data
     
-    def generate_html(self) -> str:
-        """Génère le contenu HTML complet."""
-        # Convertir l'heure UTC de GitHub en heure locale française
-        # GitHub affiche UTC mais dit que c'est CEST, donc on ajoute +2h en été
+    def _get_update_time_from_data(self) -> str:
+        """
+        Récupère l'heure de mise à jour depuis les données CSV.
+        
+        RETOURNE :
+        - Heure de mise à jour formatée ou heure actuelle par défaut
+        """
+        # Essayer de récupérer l'heure depuis les données CSV
+        for site_id_str, site_data in self.data.items():
+            models = site_data.get('models', {})
+            for model_name, model_data in models.items():
+                update_time = model_data.get('update_time', '')
+                if update_time:
+                    # Convertir le format "dd.mm. hh:mm" en "dd/mm/yyyy à hh:mm"
+                    try:
+                        # Parser l'heure de mise à jour
+                        day_month, time_part = update_time.split(' ')
+                        day, month = day_month.split('.')
+                        current_year = datetime.now().year
+                        return f"{day}/{month}/{current_year} à {time_part}"
+                    except Exception:
+                        pass
+        
+        # Fallback : heure actuelle
         utc_now = datetime.now()
-        # En juillet, on est en heure d'été (CEST = UTC+2)
         france_time = utc_now.replace(hour=(utc_now.hour + 2) % 24)
-        current_time = france_time.strftime('%d/%m/%Y à %H:%M')
+        return france_time.strftime('%d/%m/%Y à %H:%M')
+    
+    def generate_html(self) -> str:
+        """
+        Génère le contenu HTML complet.
+        
+        Cette méthode crée une page HTML complète avec :
+        - En-tête avec titre et heure de génération
+        - CSS responsive avec gradients et animations
+        - Tableaux pour chaque site avec données fusionnées
+        - Footer avec informations de génération
+        
+        RETOURNE :
+        - String HTML complet prêt à être écrit dans un fichier
+        """
+        # Récupérer l'heure de mise à jour depuis les données CSV
+        current_time = self._get_update_time_from_data()
         
         html = f"""
 <!DOCTYPE html>
@@ -905,8 +1127,6 @@ class HTMLGenerator:
             /* Réduire la taille des flèches de direction */
             .wind-direction {{
                 font-size: 1.2em;
-                font-weight: bold;
-                text-shadow: 0 0 1px currentColor;
             }}
             
             /* Réduire la taille des étoiles */
@@ -999,8 +1219,6 @@ class HTMLGenerator:
             
             .wind-direction {{
                 font-size: 1.1em;
-                font-weight: bold;
-                text-shadow: 0 0 1px currentColor;
             }}
             
             .note-stars {{
@@ -1042,7 +1260,7 @@ class HTMLGenerator:
         </div>
         
         <div class="footer">
-            <p>Généré automatiquement par WCSVS</p>
+            <p>Généré automatiquement par Le Coon Et Sa Bande</p>
         </div>
     </div>
     
@@ -1188,14 +1406,38 @@ class HTMLGenerator:
         html += '</tr>'
         return html
 
+    def _generate_direction_row(self, label: str, direction_cells: list, get_border_style_func) -> str:
+        """Génère une ligne de direction avec styles de fond conditionnels"""
+        html = f'<tr><td><b>{label}</b></td>'
+        
+        for i, (direction_html, bg_style) in enumerate(direction_cells):
+            border_style = get_border_style_func(i)
+            
+            # Combiner les styles
+            if border_style:
+                if bg_style:
+                    style_attr = f' style="{bg_style} {border_style}"'
+                else:
+                    style_attr = f' style="{border_style}"'
+            else:
+                if bg_style:
+                    style_attr = f' style="{bg_style}"'
+                else:
+                    style_attr = ''
+            
+            html += f'<td{style_attr}>{direction_html}</td>'
+        
+        html += '</tr>'
+        return html
+
     def _get_border_style(self, i: int, heures: list) -> str:
         """Génère le style de bordure pour une colonne"""
         if i == 0:
             return ""
         
         # Barre séparative entre les jours
-        current_jour = get_jour_from_heure(heures[i])
-        prev_jour = get_jour_from_heure(heures[i-1])
+        current_jour, _ = parse_heure(heures[i])
+        prev_jour, _ = parse_heure(heures[i-1])
         if current_jour != prev_jour and current_jour and prev_jour:
             return 'border-left: 2px solid #6c757d;'
         
@@ -1227,8 +1469,8 @@ class HTMLGenerator:
                 border = 'border-left: 3px solid #ff6b35;'
             # Barre séparative entre les jours (plus foncée)
             elif i > 0:
-                current_jour = get_jour_from_heure(heures[i])
-                prev_jour = get_jour_from_heure(heures[i-1])
+                current_jour, _ = parse_heure(heures[i])
+                prev_jour, _ = parse_heure(heures[i-1])
                 if current_jour != prev_jour and current_jour and prev_jour:
                     border = 'border-left: 2px solid #6c757d;'
             return border
@@ -1327,7 +1569,7 @@ class HTMLGenerator:
         rafales_bg_styles = []
         direction_is_good = []
         for i, (v, r, d, p, h) in enumerate(zip(vent, rafales, direction, pluie, heures)):
-            jour_str = get_jour_from_heure(h)
+            jour_str, _ = parse_heure(h)
             vent_bg_style = get_wind_background_class(site_id, v, r, d, jour_str, h, p, "vent")
             rafales_bg_style = get_wind_background_class(site_id, v, r, d, jour_str, h, p, "rafales")
             # Vérification direction favorable
@@ -1357,18 +1599,43 @@ class HTMLGenerator:
         # Rafales (en gras avec couleurs progressives)
         html += self._generate_wind_row('Rafales (Nds)', rafales, rafales_bg_styles, get_border_style)
         
-        # Direction (flèches colorées)
+        # Direction (flèches noires avec fond conditionnel)
         direction_cells = []
         for i, d in enumerate(direction):
             try:
                 angle = float(d)
                 css_angle = angle + 180
-                color = "#32CD32" if direction_is_good[i] else "#222"
-                direction_html = f'<span class="wind-direction" style="transform: rotate({css_angle}deg); display: inline-block; font-size: 1.7em; color: {color};">↑</span>'
+                
+                # Normaliser la direction entre 0° et 360°
+                normalized_direction = float(d) % 360 if d else 0
+                
+                # Déterminer le style de fond selon les critères de vent
+                bg_style = ""
+                jour_str, _ = parse_heure(heures[i])
+                if is_direction_favorable(site_id, normalized_direction, jour_str):  # Si direction favorable
+                    try:
+                        vent_val = float(vent[i]) if vent[i] else 0
+                        rafales_val = float(rafales[i]) if rafales[i] else 0
+                        criteria = get_criteria_for_site_and_date(site_id, jour_str)
+                        
+                        if criteria:
+                            vent_moyen = criteria["vent_moyen"]
+                            vent_bien = criteria["vent_bien"]
+                            
+                            # Même logique que pour le vent : bleu clair si vent >= vent_moyen ou rafales >= vent_bien
+                            if vent_val >= vent_moyen or rafales_val >= vent_bien:
+                                bg_style = "background-color: rgb(173, 216, 230);"  # Même bleu que pour le vent
+                    except (ValueError, TypeError):
+                        pass
+                
+                direction_html = f'<span class="wind-direction" style="transform: rotate({css_angle}deg); display: inline-block; font-size: 1.7em; color: #222;">↑</span>'
+                # Appliquer le style de fond à la cellule entière via la fonction row
+                direction_cells.append((direction_html, bg_style))
             except (ValueError, TypeError):
-                direction_html = d if d else ""
-            direction_cells.append(direction_html)
-        html += row('Direction', direction_cells, 'dir-cell')
+                direction_cells.append((d if d else "", ""))
+        
+        # Générer la ligne de direction avec les styles de fond
+        html += self._generate_direction_row('Direction', direction_cells, get_border_style)
         
         # Nuages synthétisés (maximum des 3 niveaux)
         html += self._generate_synthetic_cloud_row('Nuages', nuages_haut, nuages_moyen, nuages_bas, pluie, temp, heures, get_border_style)
@@ -1382,7 +1649,7 @@ class HTMLGenerator:
         # Calculer les notes avec étoiles
         notes = []
         for i, (v, r, d, p, h, t) in enumerate(zip(vent, rafales, direction, pluie, heures, temp)):
-            jour_str = get_jour_from_heure(h)
+            jour_str, _ = parse_heure(h)
             note = calculate_note(site_id, v, r, d, jour_str, h, p, t)
             notes.append(note)
         
@@ -1469,7 +1736,6 @@ def main() -> None:
         
     except Exception as e:
         logger.error(f"Erreur lors de la generation HTML: {str(e)}")
-
 
 if __name__ == "__main__":
     main() 
