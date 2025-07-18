@@ -84,9 +84,15 @@ def extract_table_data(table, model_name, update_time):
     if not table or not isinstance(table, Tag):
         return None
     
+    " Gestion d'une table vide ou anormale
     rows = table.find_all("tr")
     if len(rows) < 7:
         return None
+    
+    " Gestion d'une table contenant un modele de prevision de vague (3 lignes de plus entre direction et temperature)
+    offset = 0
+    if len(rows) >= 9:
+        offset = 3
     
     # Extraction des données de base
     heures_raw = [td.get_text(strip=True) for td in rows[0].find_all("td")]  # type: ignore
@@ -112,8 +118,8 @@ def extract_table_data(table, model_name, update_time):
             direction.append("")
     
     # Extraction des autres données
-    temp = [td.text.strip() for td in rows[4].find_all("td")]  # type: ignore
-    cloud_cells = rows[5].find_all("td")  # type: ignore
+    temp = [td.text.strip() for td in rows[4 + offset].find_all("td")]  # type: ignore
+    cloud_cells = rows[5 + offset].find_all("td")  # type: ignore
     nuages_haut, nuages_moyen, nuages_bas = [], [], []
     
     # Extraction des 3 niveaux de nuages (haut, moyen, bas)
@@ -126,7 +132,7 @@ def extract_table_data(table, model_name, update_time):
         nuages_moyen.append(v_moyen)
         nuages_bas.append(v_bas)
     
-    pluie = [td.text.strip() for td in rows[6].find_all("td")]  # type: ignore
+    pluie = [td.text.strip() for td in rows[6 + offset].find_all("td")]  # type: ignore
     
     return {
         "model": model_name,
