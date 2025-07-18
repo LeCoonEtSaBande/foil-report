@@ -1,3 +1,14 @@
+# === Workflow GitHub Actions - Foil Report ===
+# 
+# Ce workflow automatise la génération quotidienne du rapport météo Foil Report :
+# 1. Scraping des données Windguru (AROME + WG) pour les sites configurés
+# 2. Génération d'un rapport HTML interactif avec couleurs progressives
+# 3. Déploiement automatique sur GitHub Pages
+# 4. Gestion centralisée des dates/heures avec timezone française
+#
+# EXÉCUTIONS : 6h, 10h, 11h, 12h, 18h (heure française)
+# TECHNOLOGIES : Python, Selenium, BeautifulSoup, GitHub Pages
+
 name: Foil Report - Mise à jour quotidienne
 
 on:
