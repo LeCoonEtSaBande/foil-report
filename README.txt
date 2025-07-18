@@ -1,9 +1,17 @@
-Windguru CSV Scraper & Foil Report
+Windguru CSV Scraper & Foil Report by Le Coon Et Sa Bande
 ====================================
 
 Description
 -----------
 Script Python pour récupérer les données météorologiques de Windguru et générer un visualiseur HTML moderne optimisé pour la pratique du foil.
+
+Gestion centralisée des dates/heures
+-----------------------------------
+✅ Heure de lancement récupérée depuis GitHub Actions ou batch local
+✅ Variables d'environnement WORKFLOW_START_TIME et WORKFLOW_TIMEZONE
+✅ Heure écrite dans les CSV et lue par le visualiseur
+✅ Suppression des doublons de calcul d'heure
+✅ Format cohérent : dd/mm/yyyy à hh:mm
 
 Fonctionnalités principales
 --------------------------
@@ -34,10 +42,11 @@ Prérequis
 - Python 3.x
 - Firefox installé
 - Geckodriver dans Drivers/
+- Requirements (installé automatiquement via requirements.txt)
 
 Installation
 -----------
-pip install selenium beautifulsoup4
+pip install -r requirements.txt
 
 Configuration
 ------------
