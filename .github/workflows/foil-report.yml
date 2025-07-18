@@ -74,7 +74,7 @@ jobs:
         cd Scripts_Python
         python -c "import selenium; print('Selenium version:', selenium.__version__)"
         # Passer les variables d'environnement au script Python
-        WORKFLOW_START_TIME="${{ env.WORKFLOW_START_TIME }}" WORKFLOW_TIMEZONE="${{ env.WORKFLOW_TIMEZONE }}" python windguru_csv_scraper.py
+        WORKFLOW_START_TIME="$(date -u +'%Y-%m-%d %H:%M:%S UTC')" WORKFLOW_TIMEZONE="Europe/Paris" python windguru_csv_scraper.py
         
     - name: Génération du rapport HTML
       run: |
