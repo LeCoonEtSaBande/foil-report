@@ -39,8 +39,11 @@ JS_WAIT_TIME = 0.5  # Temps d'attente pour le JavaScript
 #
 SITES = [
     72305,  # Le Grand Large à Lyon
-    314,    # Le Lac du Monteynard  
+    193,    # Chasse sur Rhône
+    314,    # Le Lac du Monteynard
+    28061,  # Le Lac du Bourget
     179,    # Le Lac Leman
+    14,     # L'Almanarre
 ]
 
 # === CRITÈRES DE VENT PAR SITE ===
@@ -52,6 +55,34 @@ SITES = [
 # - "vent_tres_bien" : seuil pour considérer le vent comme "très bon"
 #
 SITE_CRITERIA = {
+    # === SITE 72305 - Le Grand Large à Lyon ===
+    72305: {
+        "direction": [(320, 40), (140, 220)],  # Nord-Ouest à Nord-Est OU Sud-Est à Sud-Ouest
+        "vent_moyen": 9,
+        "vent_bien": 11,
+        "vent_tres_bien": 15
+    },
+    # === SITE 193 - Chasse sur Rhône ===
+    193: {
+        "direction": [ (140, 220)],  # Sud-Est à Sud-Ouest
+        "vent_moyen": 12,
+        "vent_bien": 15,
+        "vent_tres_bien": 18
+    },
+        # === SITE 314 - Le Lac du Monteynard ===
+    314: {
+        "direction": [(320, 40), (140, 220)],  # Nord-Ouest à Nord-Est OU Sud-Est à Sud-Ouest
+        "vent_moyen": 9,
+        "vent_bien": 12,
+        "vent_tres_bien": 15
+    },
+    # === SITE 28061 - Le Lac du Bourget ===
+    28061: {
+        "direction": [(320, 40), (140, 220)],  # Nord-Ouest à Nord-Est OU Sud-Est à Sud-Ouest
+        "vent_moyen": 12,
+        "vent_bien": 15,
+        "vent_tres_bien": 18
+    },
     # === SITE 179 - Le Lac Leman ===
     179: {
         "direction": [(320, 40)],  # Nord-Ouest à Nord-Est
@@ -59,22 +90,13 @@ SITE_CRITERIA = {
         "vent_bien": 17,            # 17 nœuds pour "bon"
         "vent_tres_bien": 20        # 20 nœuds pour "très bon"
     },
-    
-    # === SITE 314 - Le Lac du Monteynard ===
-    314: {
-        "direction": [(320, 40), (140, 220)],  # Nord-Ouest à Nord-Est OU Sud-Est à Sud-Ouest
-        "vent_moyen": 12,
-        "vent_bien": 15,
-        "vent_tres_bien": 18
-    },
-    
-    # === SITE 72305 - Le Grand Large à Lyon ===
-    72305: {
-        "direction": [(320, 40), (140, 220)],  # Nord-Ouest à Nord-Est OU Sud-Est à Sud-Ouest
+    # === SITE 14 - L'Almanarre ===
+    14: {
+        "direction": [(50, 130), (230, 310)],  # Vent d'Est ou vent d'Ouest
         "vent_moyen": 9,
         "vent_bien": 11,
         "vent_tres_bien": 15
-    }
+    },
 }
 
 # === Format des fichiers CSV ===
