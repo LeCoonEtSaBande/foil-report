@@ -52,11 +52,18 @@ jobs:
         sed -i 's|DRIVER_PATH = os.path.join(PROJECT_ROOT, "Drivers", "geckodriver.exe")|DRIVER_PATH = None  # Selenium Manager sen charge automatiquement|' Scripts_Python/config.py
         sed -i 's|FIREFOX_PATH = r"C:\\Program Files\\Mozilla Firefox\\firefox.exe"|FIREFOX_PATH = "/usr/bin/firefox"|' Scripts_Python/config.py
         
+    - name: Récupération de la date/heure de lancement
+      run: |
+        # Récupérer la date/heure avec timezone pour GitHub Actions
+        echo "WORKFLOW_START_TIME=$(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_ENV
+        echo "WORKFLOW_TIMEZONE=Europe/Paris" >> $GITHUB_ENV
+        
     - name: Exécution du scraper
       run: |
         cd Scripts_Python
         python -c "import selenium; print('Selenium version:', selenium.__version__)"
-        python windguru_csv_scraper.py
+        # Passer les variables d'environnement au script Python
+        WORKFLOW_START_TIME="${{ env.WORKFLOW_START_TIME }}" WORKFLOW_TIMEZONE="${{ env.WORKFLOW_TIMEZONE }}" python windguru_csv_scraper.py
         
     - name: Génération du rapport HTML
       run: |
