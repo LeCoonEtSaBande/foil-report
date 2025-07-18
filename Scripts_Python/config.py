@@ -25,9 +25,9 @@ FIREFOX_PATH = r"C:\Program Files\Mozilla Firefox\firefox.exe"
 
 # === Configuration du scraping ===
 HEADLESS_MODE = True  # True = mode sans interface, False = avec interface
-WAIT_TIME = 5  # Temps d'attente en secondes pour le chargement des pages
-PAUSE_BETWEEN_SITES = 1  # Pause entre les sites en secondes
-JS_WAIT_TIME = 0.5  # Temps d'attente pour le JavaScript
+WAIT_TIME = 10  # Temps d'attente en secondes pour le chargement des pages
+PAUSE_BETWEEN_SITES = 2  # Pause entre les sites en secondes
+JS_WAIT_TIME = 2  # Temps d'attente pour le JavaScript
 
 # === SITES À SURVEILLER ===
 # 
