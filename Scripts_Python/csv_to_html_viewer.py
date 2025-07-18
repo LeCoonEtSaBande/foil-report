@@ -528,7 +528,7 @@ def calculate_note(site_id: int, vent: str, rafales: str, direction: str,
         A = 3
     elif vent_val >= vent_bien and rafales_val >= vent_tres_bien:
         A = 2
-    elif (vent_val >= vent_moyen and rafales_val > vent_bien) or (vent_val >= vent_bien):
+    elif (vent_val >= vent_moyen and rafales_val >= vent_bien) or (vent_val >= vent_bien and rafales_val < vent_tres_bien):
         A = 1
     else:
         A = 0
