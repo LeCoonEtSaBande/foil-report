@@ -89,20 +89,20 @@ def extract_table_data(table, model_name, update_time):
         return None
     
     # Extraction des données de base
-    heures_raw = [td.get_text(strip=True) for td in rows[0].find_all("td")]
+    heures_raw = [td.get_text(strip=True) for td in rows[0].find_all("td")]  # type: ignore
     
     # Les heures sont déjà en heure locale sur Windguru, pas besoin de conversion
     heures = heures_raw
-    vent = [td.text.strip() for td in rows[1].find_all("td")]
-    rafales = [td.text.strip() for td in rows[2].find_all("td")]
+    vent = [td.text.strip() for td in rows[1].find_all("td")]  # type: ignore
+    rafales = [td.text.strip() for td in rows[2].find_all("td")]  # type: ignore
     
     # Extraction de la direction avec correction pour AROME
     # Les flèches SVG sont orientées différemment selon le modèle
     direction = []
-    for g in rows[3].find_all("g"):
-        transform = g.get("transform", "")
+    for g in rows[3].find_all("g"):  # type: ignore
+        transform = g.get("transform", "")  # type: ignore
         if transform and "rotate(" in transform:
-            angle = transform.split("rotate(")[-1].split(",")[0]
+            angle = transform.split("rotate(")[-1].split(",")[0]  # type: ignore
             try:
                 corrected_angle = float(angle) - 180  # Correction d'orientation
                 direction.append(str(int(corrected_angle)))
@@ -112,13 +112,13 @@ def extract_table_data(table, model_name, update_time):
             direction.append("")
     
     # Extraction des autres données
-    temp = [td.text.strip() for td in rows[4].find_all("td")]
-    cloud_cells = rows[5].find_all("td")
+    temp = [td.text.strip() for td in rows[4].find_all("td")]  # type: ignore
+    cloud_cells = rows[5].find_all("td")  # type: ignore
     nuages_haut, nuages_moyen, nuages_bas = [], [], []
     
     # Extraction des 3 niveaux de nuages (haut, moyen, bas)
     for td in cloud_cells:
-        divs = td.find_all("div", class_="clouds")
+        divs = td.find_all("div", class_="clouds")  # type: ignore
         v_haut = divs[0].get_text(strip=True) if len(divs) > 0 else ""
         v_moyen = divs[1].get_text(strip=True) if len(divs) > 1 else ""
         v_bas = divs[2].get_text(strip=True) if len(divs) > 2 else ""
@@ -126,7 +126,7 @@ def extract_table_data(table, model_name, update_time):
         nuages_moyen.append(v_moyen)
         nuages_bas.append(v_bas)
     
-    pluie = [td.text.strip() for td in rows[6].find_all("td")]
+    pluie = [td.text.strip() for td in rows[6].find_all("td")]  # type: ignore
     
     return {
         "model": model_name,
