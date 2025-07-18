@@ -84,12 +84,12 @@ def extract_table_data(table, model_name, update_time):
     if not table or not isinstance(table, Tag):
         return None
     
-    " Gestion d'une table vide ou anormale
+    # Gestion d'une table vide ou anormale
     rows = table.find_all("tr")
     if len(rows) < 7:
         return None
     
-    " Gestion d'une table contenant un modele de prevision de vague (3 lignes de plus entre direction et temperature)
+    # Gestion d'une table contenant un modele de prevision de vague (3 lignes de plus entre direction et temperature)
     offset = 0
     if len(rows) >= 9:
         offset = 3
