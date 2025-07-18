@@ -92,7 +92,9 @@ def extract_table_data(table, model_name, update_time):
     # Gestion d'une table contenant un modele de prevision de vague (3 lignes de plus entre direction et temperature)
     offset = 0
     if len(rows) >= 9:
-        offset = 3
+        offset = 0
+    
+    print(f"{len(rows)}")
     
     # Extraction des données de base
     heures_raw = [td.get_text(strip=True) for td in rows[0].find_all("td")]  # type: ignore
