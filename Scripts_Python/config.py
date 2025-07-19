@@ -85,7 +85,7 @@ SITE_CRITERIA = {
     },
     # === SITE 179 - Le Lac Leman ===
     179: {
-        "direction": [(320, 40)],  # Nord-Ouest à Nord-Est
+        "direction": [(335, 55),(155,235)]    # Nord-Ouest à Nord-Est
         "vent_moyen": 14,           # 14 nœuds minimum
         "vent_bien": 17,            # 17 nœuds pour "bon"
         "vent_tres_bien": 20        # 20 nœuds pour "très bon"
