@@ -54,48 +54,60 @@ SITES = [
 # - "vent_bien" : seuil pour considérer le vent comme "bon"
 # - "vent_tres_bien" : seuil pour considérer le vent comme "très bon"
 #
-SITE_CRITERIA = {
+SITES_CRITERIA = {
     # === SITE 72305 - Le Grand Large à Lyon ===
     72305: {
         "direction": [(320, 40), (140, 220)],  # Nord-Ouest à Nord-Est OU Sud-Est à Sud-Ouest
         "vent_moyen": 9,
         "vent_bien": 11,
-        "vent_tres_bien": 15
+        "vent_tres_bien": 15,
+        "balise" : "",
+        "webcam" : ""
     },
     # === SITE 193 - Chasse sur Rhône ===
     193: {
         "direction": [ (140, 220)],  # Sud-Est à Sud-Ouest
         "vent_moyen": 12,
         "vent_bien": 15,
-        "vent_tres_bien": 18
+        "vent_tres_bien": 18,
+        "balise" : "",
+        "webcam" : ""
     },
         # === SITE 314 - Le Lac du Monteynard ===
     314: {
         "direction": [(320, 40), (140, 220)],  # Nord-Ouest à Nord-Est OU Sud-Est à Sud-Ouest
         "vent_moyen": 9,
         "vent_bien": 12,
-        "vent_tres_bien": 15
+        "vent_tres_bien": 15,
+        "balise" : "",
+        "webcam" : ""
     },
     # === SITE 28061 - Le Lac du Bourget ===
     28061: {
         "direction": [(320, 40), (140, 220)],  # Nord-Ouest à Nord-Est OU Sud-Est à Sud-Ouest
         "vent_moyen": 12,
         "vent_bien": 15,
-        "vent_tres_bien": 18
+        "vent_tres_bien": 18,
+        "balise" : "",
+        "webcam" : ""
     },
     # === SITE 179 - Le Lac Leman ===
     179: {
         "direction": [(340, 60),(185,265)],    # Nord-Ouest à Nord-Est
         "vent_moyen": 14,           # 14 nœuds minimum
         "vent_bien": 17,            # 17 nœuds pour "bon"
-        "vent_tres_bien": 20        # 20 nœuds pour "très bon"
+        "vent_tres_bien": 20,       # 20 nœuds pour "très bon"
+        "balise" : "",
+        "webcam" : ""
     },
     # === SITE 14 - L'Almanarre ===
     14: {
         "direction": [(50, 130), (230, 310)],  # Vent d'Est ou vent d'Ouest
         "vent_moyen": 9,
         "vent_bien": 11,
-        "vent_tres_bien": 15
+        "vent_tres_bien": 15,
+        "balise" : "",
+        "webcam" : ""
     }
 }
 
