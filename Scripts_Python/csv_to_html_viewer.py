@@ -421,7 +421,7 @@ def get_cloud_emojis(percentage_str: str, has_rain: bool = False, temperature: s
         return ""
 
 
-def get_criteria_for_site_and_date(site_id: int, date_str: str) -> Optional[Dict]:
+def get_criteria_for_site(site_id: int) -> Optional[Dict]:
     """
     Retourne les critères appropriés pour un site.
     
@@ -432,7 +432,6 @@ def get_criteria_for_site_and_date(site_id: int, date_str: str) -> Optional[Dict
     
     ARGUMENTS :
     - site_id : ID du site Windguru
-    - date_str : Date (non utilisée depuis simplification)
     
     RETOURNE :
     - Dict des critères ou None si site non trouvé
@@ -459,7 +458,7 @@ def is_direction_favorable(site_id: int, direction_val: float, jour_str: str) ->
     RETOURNE :
     - True si direction favorable, False sinon
     """
-    criteria = get_criteria_for_site_and_date(site_id, jour_str)
+    criteria = SITES_CRITERIA[site_id]
     if not criteria:
         return False
     
@@ -502,7 +501,7 @@ def calculate_note(site_id: int, vent: str, rafales: str, direction: str,
     RETOURNE :
     - HTML avec étoiles empilées verticalement
     """
-    criteria = get_criteria_for_site_and_date(site_id, jour_str)
+    criteria = SITES_CRITERIA[site_id]
     if not criteria:
         return ""
     
@@ -580,7 +579,7 @@ def get_wind_color_progressive(site_id: int, wind_value: float, check_type: str 
     RETOURNE :
     - Style CSS background-color avec couleur progressive
     """
-    criteria = get_criteria_for_site_and_date(site_id, "")
+    criteria = SITES_CRITERIA[site_id]
     if not criteria:
         return ""
     
@@ -668,7 +667,7 @@ def get_wind_background_class(site_id: int, vent: str, rafales: str, direction: 
     RETOURNE :
     - Style CSS background-color ou chaîne vide
     """
-    criteria = get_criteria_for_site_and_date(site_id, jour_str)
+    criteria = SITES_CRITERIA[site_id]
     if not criteria:
         return ""
     
@@ -1569,7 +1568,7 @@ class HTMLGenerator:
             vent_bg_style = get_wind_background_class(site_id, v, r, d, jour_str, h, p, "vent")
             rafales_bg_style = get_wind_background_class(site_id, v, r, d, jour_str, h, p, "rafales")
             # Vérification direction favorable
-            criteria = get_criteria_for_site_and_date(site_id, jour_str)
+            criteria = SITES_CRITERIA[site_id]
             is_good = False
             if criteria:
                 try:
@@ -1612,7 +1611,7 @@ class HTMLGenerator:
                     try:
                         vent_val = float(vent[i]) if vent[i] else 0
                         rafales_val = float(rafales[i]) if rafales[i] else 0
-                        criteria = get_criteria_for_site_and_date(site_id, jour_str)
+                        criteria = SITES_CRITERIA[site_id]
                         
                         if criteria:
                             vent_moyen = criteria["vent_moyen"]
