@@ -862,25 +862,27 @@ class HTMLGenerator:
             margin: 0;
         }}
         
-        .site-header .header-sites-links {
+        .site-header .header-sites-links {{
             opacity: 0.8;
             font-size: 0.7em;
             text-align: center;
             color: white;
-        }
+            text-decoration: none;
+            transition: opacity 0.2s ease, text-decoration 0.2s ease;
+        }}
         
-        .site-header .header-sites-links:visited {
+        .site-header .header-sites-links:visited {{
             color: white;
-        }
+        }}
         
-        .site-header .header-sites-links:hover {
-            text-decoration: underline;
+        .site-header .header-sites-links:hover {{
             opacity: 1;
-        }
+            text-decoration: underline;
+        }}
         
-        .site-header .header-sites-links:active {
+        .site-header .header-sites-links:active {{
             color: white;
-        }
+        }}
         
         .data-table {{
             width: max-content;
