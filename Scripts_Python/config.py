@@ -19,6 +19,9 @@ PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
 # === Chemins des fichiers ===
 DRIVER_PATH = os.path.join(PROJECT_ROOT, "Drivers", "geckodriver.exe")
 CSV_FOLDER = os.path.join(PROJECT_ROOT, "Donnees_Temporaires")
+# === Format des fichiers CSV ===
+CSV_DELIMITER = ';'  # Séparateur de colonnes : '\t' (TSV), ',' (CSV), ';' (CSV européen)
+CSV_ENCODING = 'utf-8'  # Encodage des fichiers
 
 # === Configuration Firefox ===
 FIREFOX_PATH = r"C:\Program Files\Mozilla Firefox\firefox.exe"
@@ -110,7 +113,3 @@ SITES_CRITERIA = {
         "webcam" : ""
     }
 }
-
-# === Format des fichiers CSV ===
-CSV_DELIMITER = ';'  # Séparateur de colonnes : '\t' (TSV), ',' (CSV), ';' (CSV européen)
-CSV_ENCODING = 'utf-8'  # Encodage des fichiers
