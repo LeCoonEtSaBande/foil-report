@@ -420,28 +420,6 @@ def get_cloud_emojis(percentage_str: str, has_rain: bool = False, temperature: s
     except ValueError:
         return ""
 
-
-def get_criteria_for_site(site_id: int) -> Optional[Dict]:
-    """
-    Retourne les critères appropriés pour un site.
-    
-    Cette fonction récupère les critères de vent définis dans config.py
-    pour un site donné. Les critères incluent :
-    - Directions favorables
-    - Seuils de vent (moyen, bien, très bien)
-    
-    ARGUMENTS :
-    - site_id : ID du site Windguru
-    
-    RETOURNE :
-    - Dict des critères ou None si site non trouvé
-    """
-    if site_id not in SITES_CRITERIA:
-        return None
-    
-    return SITES_CRITERIA[site_id]
-
-
 def is_direction_favorable(site_id: int, direction_val: float, jour_str: str) -> bool:
     """
     Vérifie si la direction du vent est favorable pour un site donné.
