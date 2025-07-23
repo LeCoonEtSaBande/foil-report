@@ -442,7 +442,7 @@ def main():
             data_count = len(wg_data.get('heures', []))
             logger.data_extracted(site_id, data_count)
             
-            save_to_csv_raw(CSV_FOLDER, CSV_DELIMITER, CSV_ENCODER, site_id, wg_data, arome_data, site_name)
+            save_to_csv_raw(CSV_FOLDER, CSV_DELIMITER, CSV_ENCODING, site_id, wg_data, arome_data, site_name)
             success_count += 1
             
             # Log des modèles trouvés
