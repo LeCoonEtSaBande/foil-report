@@ -429,7 +429,7 @@ def main():
     logger.start_scraping()
     
     # Scraping parallèle
-    results = scrape_windguru_parallel()
+    results = scrape_windguru_parallel(SITES, WAIT_TIME, JS_WAIT_TIME)
     
     # Sauvegarde des résultats
     success_count = 0
