@@ -40,7 +40,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import queue
 
 # === Import de la configuration ===
-from config import WAIT_TIME, JS_WAIT_TIME, DRIVER_PATH, FIREFOX_PATH, HEADLESS_MODE, SITES
+from config import WAIT_TIME, JS_WAIT_TIME, DRIVER_PATH, FIREFOX_PATH, HEADLESS_MODE, SITES, CSV_FOLDER
 from logger import init_logger, get_logger
 
 # === Verrou global pour synchroniser l'accès au driver ===
