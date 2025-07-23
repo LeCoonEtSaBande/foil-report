@@ -299,7 +299,7 @@ def scrape_site_in_tab(driver, site_id, tab_index, total_sites, w8time, w8timejs
         logger.site_error(site_id, str(e))
         return site_id, None, None, f"Site {site_id}"
 
-def scrape_windguru_parallel():
+def scrape_windguru_parallel(ls_sites, w8time, w8timejs):
     """
     Scrape tous les sites en parallèle avec des onglets.
     
@@ -317,13 +317,13 @@ def scrape_windguru_parallel():
     else:
         driver = webdriver.Firefox(service=Service(DRIVER_PATH), options=options)
     results = {}
-    total_sites = len(SITES)
+    total_sites = len(ls_sites)
     
     logger.browser_start()
     
     try:
         # Créer un onglet pour chaque site
-        for i, site_id in enumerate(SITES):
+        for i, site_id in enumerate(ls_sites):
             if i == 0:
                 # Le premier onglet existe déjà
                 pass
@@ -333,9 +333,9 @@ def scrape_windguru_parallel():
         
         # Traiter tous les sites en parallèle
         threads = []
-        for i, site_id in enumerate(SITES):
+        for i, site_id in enumerate(ls_sites):
             thread = threading.Thread(
-                target=lambda site_id=site_id, i=i: results.update({site_id: scrape_site_in_tab(driver, site_id, i, total_sites)}, WAIT_TIME, JS_WAIT_TIME)
+                target=lambda site_id=site_id, i=i: results.update({site_id: scrape_site_in_tab(driver, site_id, i, total_sites)}, w8time, w8timejs)
             )
             threads.append(thread)
             thread.start()
