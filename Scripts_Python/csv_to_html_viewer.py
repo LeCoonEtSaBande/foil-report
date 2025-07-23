@@ -1260,15 +1260,18 @@ class HTMLGenerator:
         site_name = site_data.get('site_name', f"Site {site_id}")
         update_time_arome = merged.get('update_time_arome', '')
         update_time_wg = merged.get('update_time_wg', '')
-        
+
         html = f"""
-            <div class="site-card">
-                <div class="site-header">
-                    <h2>📍 {site_name}</h2>
-                    <span class="update-time">AROME: {update_time_arome} | WG: {update_time_wg}</span>
-                </div>
-                <div class="table-container" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+        <div class="site-card">
+            <div class="site-header">
+                <h2>📍 {site_name}</h2>
+                <a href="https://www.windguru.cz/{site_id}" class="update-time" target="_blank">
+                    Lien Windguru
+                </a>
+            </div>
+            <div class="table-container" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
         """
+
         html += self._generate_merged_table_html(site_id, merged)
         html += """
                 </div>
