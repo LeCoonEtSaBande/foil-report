@@ -862,10 +862,25 @@ class HTMLGenerator:
             margin: 0;
         }}
         
-        .site-header .update-time {{
+        .site-header .header-sites-links {
             opacity: 0.8;
-            font-size: 0.9em;
-        }}
+            font-size: 0.7em;
+            text-align: center;
+            color: white;
+        }
+        
+        .site-header .header-sites-links:visited {
+            color: white;
+        }
+        
+        .site-header .header-sites-links:hover {
+            text-decoration: underline;
+            opacity: 1;
+        }
+        
+        .site-header .header-sites-links:active {
+            color: white;
+        }
         
         .data-table {{
             width: max-content;
@@ -1000,11 +1015,6 @@ class HTMLGenerator:
             
             .site-header h2 {{
                 font-size: 1.1em;
-            }}
-            
-            .site-header .update-time {{
-                font-size: 0.8em;
-                text-align: center;
             }}
             
             /* Container de scroll pour mobile */
@@ -1151,10 +1161,6 @@ class HTMLGenerator:
                 font-size: 1em;
             }}
             
-            .site-header .update-time {{
-                font-size: 0.7em;
-            }}
-            
             /* Container de scroll pour mobile */
             .table-container {{
                 margin: 8px 0;
@@ -1265,7 +1271,7 @@ class HTMLGenerator:
         <div class="site-card">
             <div class="site-header">
                 <h2>📍 {site_name}</h2>
-                <a href="https://www.windguru.cz/{site_id}" class="update-time" target="_blank">
+                <a href="https://www.windguru.cz/{site_id}" class="header-sites-links" target="_blank">
                     Lien Windguru
                 </a>
             </div>
