@@ -40,7 +40,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import queue
 
 # === Import de la configuration ===
-from config import *
+from config import WAIT_TIME, JS_WAIT_TIME, DRIVER_PATH, FIREFOX_PATH, HEADLESS_MODE, SITES
 from logger import init_logger, get_logger
 
 # === Verrou global pour synchroniser l'accès au driver ===
@@ -185,7 +185,7 @@ def write_model_data_to_csv(writer, model_data, max_cols):
     writer.writerow(["Precipitations (mm/1h)"] + model_data["pluie"])
     writer.writerow(["Note Windguru"] + [""] * (max_cols - 1))
 
-def scrape_site_in_tab(driver, site_id, tab_index, total_sites):
+def scrape_site_in_tab(driver, site_id, tab_index, total_sites, w8time, w8timejs):
     """
     Scrape un site dans un onglet spécifique avec synchronisation.
     
@@ -219,13 +219,13 @@ def scrape_site_in_tab(driver, site_id, tab_index, total_sites):
             
             # Attendre seulement les éléments essentiels avec timeout optimisé
             logger.loading_page(site_id, current_site, total_sites)
-            WebDriverWait(driver, WAIT_TIME).until(
+            WebDriverWait(driver, w8time).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "table.tabulka"))
             )
             
             # Attendre juste 0.5 seconde pour le JavaScript (optimisé)
             logger.waiting_data(site_id, current_site, total_sites)
-            time.sleep(JS_WAIT_TIME)
+            time.sleep(w8timejs)
             
             # Récupération du nom du site (sélecteur .spot-name)
             site_name = f"Site {site_id}"
@@ -335,7 +335,7 @@ def scrape_windguru_parallel():
         threads = []
         for i, site_id in enumerate(SITES):
             thread = threading.Thread(
-                target=lambda site_id=site_id, i=i: results.update({site_id: scrape_site_in_tab(driver, site_id, i, total_sites)})
+                target=lambda site_id=site_id, i=i: results.update({site_id: scrape_site_in_tab(driver, site_id, i, total_sites)}, WAIT_TIME, JS_WAIT_TIME)
             )
             threads.append(thread)
             thread.start()
