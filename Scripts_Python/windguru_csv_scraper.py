@@ -335,7 +335,7 @@ def scrape_windguru_parallel(ls_sites, w8time, w8timejs):
         threads = []
         for i, site_id in enumerate(ls_sites):
             thread = threading.Thread(
-                target=lambda site_id=site_id, i=i: results.update({site_id: scrape_site_in_tab(driver, site_id, i, total_sites)}, w8time, w8timejs)
+                target=lambda site_id=site_id, i=i: results.update({site_id: scrape_site_in_tab(driver, site_id, i, total_sites, w8time, w8timejs)})
             )
             threads.append(thread)
             thread.start()
