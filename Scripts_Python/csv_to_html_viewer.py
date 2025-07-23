@@ -1645,6 +1645,8 @@ class HTMLGenerator:
         """
         return html
 
+def is_github_actions() -> bool:
+    return os.environ.get("GITHUB_ACTIONS") == "true"
 
 def open_in_firefox(html_file: str) -> None:
     """Ouvre le fichier HTML dans Firefox."""
@@ -1660,7 +1662,6 @@ def open_in_firefox(html_file: str) -> None:
             logger.firefox_opened(os.path.basename(html_file))
         except Exception as e2:
             logger.error(f"Impossible d'ouvrir Firefox: {str(e)}")
-
 
 def main() -> None:
     """Fonction principale."""
@@ -1713,8 +1714,9 @@ def main() -> None:
         
         logger.html_generated(os.path.basename(html_file))
         
-        # Ouvrir dans Firefox
-        open_in_firefox(html_file)
+        # Ouvrir dans Firefox sauf si github action
+        if not is_github_actions():
+            open_in_firefox(html_file)
         
         logger.viewer_finish()
         
