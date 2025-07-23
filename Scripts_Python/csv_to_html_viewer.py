@@ -1274,7 +1274,7 @@ class HTMLGenerator:
             <div class="site-header">
                 <h2>📍 {site_name}</h2>
                 <a href="https://www.windguru.cz/{site_id}" class="header-sites-links" target="_blank">
-                    Lien Windguru
+                    🔍 Lien Windguru   🚩 Lien Balise   🎥 Lien Webcam
                 </a>
             </div>
             <div class="table-container" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
