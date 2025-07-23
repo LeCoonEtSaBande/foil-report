@@ -437,10 +437,10 @@ def get_criteria_for_site_and_date(site_id: int, date_str: str) -> Optional[Dict
     RETOURNE :
     - Dict des critères ou None si site non trouvé
     """
-    if site_id not in SITE_CRITERIA:
+    if site_id not in SITES_CRITERIA:
         return None
     
-    return SITE_CRITERIA[site_id]
+    return SITES_CRITERIA[site_id]
 
 
 def is_direction_favorable(site_id: int, direction_val: float, jour_str: str) -> bool:
