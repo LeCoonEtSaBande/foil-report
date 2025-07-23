@@ -31,12 +31,8 @@ from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 import webbrowser
 import subprocess
-from config import CSV_FOLDER, FIREFOX_PATH, SITES
+from config import CSV_FOLDER, FIREFOX_PATH, SITES, SITES_CRITERIA
 from logger import init_logger, get_logger
-
-# === Configuration des critères de vent par site ===
-from config import SITE_CRITERIA
-
 
 class CSVDataReader:
     """
