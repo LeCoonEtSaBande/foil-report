@@ -40,7 +40,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import queue
 
 # === Import de la configuration ===
-from config import WAIT_TIME, JS_WAIT_TIME, DRIVER_PATH, FIREFOX_PATH, HEADLESS_MODE, SITES, CSV_FOLDER, CSV_ENCODING, CSV_DELIMITER
+from config import WAIT_TIME, JS_WAIT_TIME, DRIVER_PATH, FIREFOX_PATH, HEADLESS_MODE, SITES
+from config import CSV_FOLDER, CSV_ENCODING, CSV_DELIMITER
 from logger import init_logger, get_logger
 
 # === Verrou global pour synchroniser l'accès au driver ===
@@ -350,7 +351,7 @@ def scrape_windguru_parallel(ls_sites, w8time, w8timejs):
         logger.browser_close()
         driver.quit()
 
-def save_to_csv_raw(site_id, wg_data, arome_data=None, site_name=""):
+def save_to_csv_raw(folder, delimiter, encoding, site_id, wg_data, arome_data=None, site_name=""):
     """
     Sauvegarde les données brutes dans un fichier CSV.
     
@@ -364,7 +365,7 @@ def save_to_csv_raw(site_id, wg_data, arome_data=None, site_name=""):
     - site_name : Nom du site
     """
     logger = get_logger()
-    filename = os.path.join(CSV_FOLDER, f"Donnees_WG_{site_id}.csv")
+    filename = os.path.join(folder, f"Donnees_WG_{site_id}.csv")
     
     # Déterminer le nombre maximum de colonnes
     max_cols = len(wg_data["heures"]) if wg_data else 0
@@ -373,8 +374,8 @@ def save_to_csv_raw(site_id, wg_data, arome_data=None, site_name=""):
     
     logger.saving_data(site_id)
     
-    with open(filename, 'w', newline='', encoding=CSV_ENCODING) as csvfile:
-        writer = csv.writer(csvfile, delimiter=CSV_DELIMITER)
+    with open(filename, 'w', newline='', encoding=encoding) as csvfile:
+        writer = csv.writer(csvfile, delimiter=delimiter)
         
         # En-tête avec ID du site et nom
         header = ["ID Site", site_id] + [""] * (max_cols - 1)
@@ -441,7 +442,7 @@ def main():
             data_count = len(wg_data.get('heures', []))
             logger.data_extracted(site_id, data_count)
             
-            save_to_csv_raw(site_id, wg_data, arome_data, site_name)
+            save_to_csv_raw(CSV_FOLDER, CSV_DELIMITER, CSV_ENCODER, site_id, wg_data, arome_data, site_name)
             success_count += 1
             
             # Log des modèles trouvés
