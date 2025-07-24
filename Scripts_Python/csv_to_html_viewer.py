@@ -165,7 +165,6 @@ class CSVDataReader:
         logger.data_loaded(len(self.data))
         return self.data
 
-
 def merge_models(site_data: dict) -> dict:
     """
     Fusionne les données AROME et WG pour un site.
@@ -238,7 +237,6 @@ def merge_models(site_data: dict) -> dict:
         'update_time_wg': wg.get('update_time', ''),
     }
     return merged
-
 
 def get_jour_complet(abreviation: str) -> str:
     """
@@ -448,7 +446,6 @@ def is_direction_favorable(site_id: int, direction_val: float, jour_str: str) ->
         else:  # Cas qui traverse 0° (ex: 315-45)
             if direction_val >= dir_min or direction_val <= dir_max:
                 return True
-    
     return False
 
 def calculate_note(site_id: int, vent: str, rafales: str, direction: str, 
@@ -919,8 +916,6 @@ class HTMLGenerator:
             text-overflow: ellipsis;
         }}
         
-
-        
         .data-table tr:hover {{
             background: #e3f2fd;
         }}
@@ -934,8 +929,6 @@ class HTMLGenerator:
             cursor: help;
             font-size: 1.2em;
         }}
-        
-
         
         .note-stars {{
             color: #ffc107;
