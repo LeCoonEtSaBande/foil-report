@@ -1271,7 +1271,7 @@ class HTMLGenerator:
         <div class="site-card">
             <div class="site-header">
                 <h2>📍 {site_name}</h2>
-                <div class="sites-links">
+                <div class="header-sites-links">
                     <a href="https://www.windguru.cz/{site_id}" target="_blank">🔍 Windguru</a>
                     {f'<a href="{balise}" target="_blank">🚩 Balise</a>' if balise else ''}
                     {f'<a href="{webcam}" target="_blank">🎥 Webcam</a>' if webcam else ''}
