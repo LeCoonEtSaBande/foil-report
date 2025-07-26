@@ -1262,26 +1262,19 @@ class HTMLGenerator:
         update_time_arome = merged.get('update_time_arome', '')
         update_time_wg = merged.get('update_time_wg', '')
 
-        balise_url = SITES_CRITERIA[site_id].get("balise", "").strip()
-        webcam_url = SITES_CRITERIA[site_id].get("webcam", "").strip()
-        
-        balise_link_html = (
-            f'<a href="{balise_url}" class="header-sites-links" target="_blank">🚩 Lien Balise</a>'
-            if balise_url else ""
-        )
-        
-        webcam_link_html = (
-            f'<a href="{webcam_url}" class="header-sites-links" target="_blank">🎥 Lien Webcam</a>'
-            if webcam_url else ""
-        )
+        criteria = SITES_CRITERIA[site_id]
+        balise = criteria["balise"]
+        webcam = criteria["webcam"]
         
         html = f"""
         <div class="site-card">
             <div class="site-header">
                 <h2>📍 {site_name}</h2>
-                <a href="https://www.windguru.cz/{site_id}" class="header-sites-links" target="_blank">🔍 Lien Windguru</a>
-                {balise_link_html}
-                {webcam_link_html}
+                <div class="site-links">
+                    <a href="https://www.windguru.cz/{site_id}" target="_blank">🔍 Windguru</a>
+                    {f'<a href="{balise}" target="_blank">🚩 Balise</a>' if balise else ''}
+                    {f'<a href="{webcam}" target="_blank">🎥 Webcam</a>' if webcam else ''}
+                </div>
             </div>
             <div class="table-container" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
         """
