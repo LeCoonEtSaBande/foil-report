@@ -859,7 +859,7 @@ class HTMLGenerator:
             margin: 0;
         }}
         
-        .site-header .header-sites-links a {
+        .site-header .header-site-links a {{
             color: white;
             opacity: 0.8;
             gap: 12px;
@@ -867,20 +867,20 @@ class HTMLGenerator:
             text-align: center;
             text-decoration: none;
             transition: opacity 0.2s ease, text-decoration 0.2s ease;
-        }
+        }}
         
-        .site-header .header-sites-links a:visited {
+        .site-header .header-site-links a:visited {{
             color: white;
-        }
+        }}
         
-        .site-header .header-sites-links a:hover {
+        .site-header .header-site-links a:hover {{
             opacity: 1;
             text-decoration: underline;
-        }
+        }}
         
-        .site-header .header-sites-links a:active {
+        .site-header .header-site-links a:active {{
             color: white;
-        }
+        }}
         
         .data-table {{
             width: max-content;
@@ -1271,7 +1271,7 @@ class HTMLGenerator:
         <div class="site-card">
             <div class="site-header">
                 <h2>📍 {site_name}</h2>
-                <div class="header-sites-links">
+                <div class="header-site-links">
                     <a href="https://www.windguru.cz/{site_id}" target="_blank">🔍 Windguru</a>
                     {f'<a href="{balise}" target="_blank">🚩 Balise</a>' if balise else ''}
                     {f'<a href="{webcam}" target="_blank">🎥 Webcam</a>' if webcam else ''}
