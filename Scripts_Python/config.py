@@ -63,7 +63,7 @@ SITES_CRITERIA = {
         "vent_moyen": 9,
         "vent_bien": 11,
         "vent_tres_bien": 15,
-        "balise" : "",
+        "balise" : "https://m.winds-up.com/index.php?p=spot&id=138",
         "webcam" : ""
     },
     # === SITE 193 - Chasse sur Rhône ===
@@ -81,8 +81,8 @@ SITES_CRITERIA = {
         "vent_moyen": 9,
         "vent_bien": 12,
         "vent_tres_bien": 15,
-        "balise" : "",
-        "webcam" : ""
+        "balise" : "https://m.winds-up.com/index.php?p=spot&id=36",
+        "webcam" : "https://www.onekite.com/webcam-monteynard"
     },
     # === SITE 28061 - Le Lac du Bourget ===
     28061: {
@@ -90,8 +90,8 @@ SITES_CRITERIA = {
         "vent_moyen": 12,
         "vent_bien": 15,
         "vent_tres_bien": 18,
-        "balise" : "",
-        "webcam" : ""
+        "balise" : "https://balisemeteo.com/balise.php?idBalise=2456",
+        "webcam" : "https://www.skaping.com/grandlac/grandport"
     },
     # === SITE 179 - Le Lac Leman ===
     179: {
@@ -99,8 +99,8 @@ SITES_CRITERIA = {
         "vent_moyen": 14,           # 14 nœuds minimum
         "vent_bien": 17,            # 17 nœuds pour "bon"
         "vent_tres_bien": 20,       # 20 nœuds pour "très bon"
-        "balise" : "",
-        "webcam" : ""
+        "balise" : "http://meteo-sciez.fr/site/mesure_vent.php",
+        "webcam" : "https://www.skaping.com/excenevex/plage"
     },
     # === SITE 14 - L'Almanarre ===
     14: {
@@ -108,7 +108,7 @@ SITES_CRITERIA = {
         "vent_moyen": 9,
         "vent_bien": 11,
         "vent_tres_bien": 15,
-        "balise" : "",
-        "webcam" : ""
+        "balise" : "https://m.winds-up.com/index.php?p=spot&id=2",
+        "webcam" : "https://hyeres.fr/webcams/"
     }
 }
