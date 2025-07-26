@@ -848,7 +848,7 @@ class HTMLGenerator:
         .site-header {{
             background: #343a40;
             color: white;
-            padding: 15px 20px;
+            padding: 14px 19px;
             display: flex;
             justify-content: space-between;
             align-items: center;
