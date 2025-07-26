@@ -861,6 +861,7 @@ class HTMLGenerator:
         
         .site-header .header-sites-links {{
             opacity: 0.8;
+            gap : 12px;
             font-size: 0.7em;
             text-align: center;
             color: white;
@@ -1270,7 +1271,7 @@ class HTMLGenerator:
         <div class="site-card">
             <div class="site-header">
                 <h2>📍 {site_name}</h2>
-                <div class="site-links">
+                <div class="sites-links">
                     <a href="https://www.windguru.cz/{site_id}" target="_blank">🔍 Windguru</a>
                     {f'<a href="{balise}" target="_blank">🚩 Balise</a>' if balise else ''}
                     {f'<a href="{webcam}" target="_blank">🎥 Webcam</a>' if webcam else ''}
