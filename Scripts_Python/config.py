@@ -50,7 +50,7 @@ JS_WAIT_TIME = 2  # Temps d'attente pour le JavaScript
 
 SITES_CRITERIA = {
     72305: {  # Le Grand Large à Lyon
-        "nom": "Le Grand Large à Lyon",
+        "nom": "Le Grand Large",
         "direction": [(320, 40), (140, 220)],
         "vent_moyen": 9,
         "vent_bien": 11,
@@ -70,18 +70,9 @@ SITES_CRITERIA = {
     2020: {  # Porte les Valence
         "nom": "Porte les Valence",
         "direction": [],
-        "vent_moyen": 12,
-        "vent_bien": 15,
-        "vent_tres_bien": 18,
-        "balise_url": "",
-        "webcam_url": ""
-    },
-    8248: {  # Lac de Laffrey
-        "nom": "Lac de Laffrey",
-        "direction": [],
-        "vent_moyen": 10,
-        "vent_bien": 13,
-        "vent_tres_bien": 16,
+        "vent_moyen": ,
+        "vent_bien": ,
+        "vent_tres_bien": ,
         "balise_url": "",
         "webcam_url": ""
     },
@@ -94,6 +85,15 @@ SITES_CRITERIA = {
         "balise_url": "https://m.winds-up.com/index.php?p=spot&id=36",
         "webcam_url": "https://www.onekite.com/webcam-monteynard"
     },
+    8248: {  # Lac de Laffrey
+        "nom": "Lac de Laffrey",
+        "direction": [],
+        "vent_moyen": 12,
+        "vent_bien": 15,
+        "vent_tres_bien": 18,
+        "balise_url": "",
+        "webcam_url": ""
+    },
     28061: {  # Le Lac du Bourget
         "nom": "Lac du Bourget",
         "direction": [(320, 40), (140, 220)],
@@ -104,7 +104,7 @@ SITES_CRITERIA = {
         "webcam_url": "https://www.skaping.com/grandlac/grandport"
     },
     179: {  # Le Lac Léman
-        "nom": "Lac Léman",
+        "nom": "Sciez/Excenevex",
         "direction": [(340, 60), (185, 265)],
         "vent_moyen": 14,
         "vent_bien": 17,
