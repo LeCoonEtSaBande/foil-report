@@ -1679,7 +1679,7 @@ def main() -> None:
     
     # Trier les données selon l'ordre des sites dans config.py
     sorted_data = {}
-    for site_id in getSitesID:
+    for site_id in getSitesID():
         site_id_str = str(site_id)
         if site_id_str in data:
             sorted_data[site_id_str] = data[site_id_str]
