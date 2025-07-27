@@ -55,8 +55,8 @@ SITES_CRITERIA = {
         "vent_moyen": 9,
         "vent_bien": 11,
         "vent_tres_bien": 15,
-        "balise": "https://m.winds-up.com/index.php?p=spot&id=138",
-        "webcam": ""
+        "balise_url": "https://m.winds-up.com/index.php?p=spot&id=138",
+        "webcam_url": ""
     },
     193: {  # Chasse sur Rhône
         "nom": "Chasse sur Rhône",
@@ -64,8 +64,8 @@ SITES_CRITERIA = {
         "vent_moyen": 12,
         "vent_bien": 15,
         "vent_tres_bien": 18,
-        "balise": "",
-        "webcam": ""
+        "balise_url": "",
+        "webcam_url": ""
     },
     2020: {  # Porte les Valence
         "nom": "Porte les Valence",
@@ -73,8 +73,8 @@ SITES_CRITERIA = {
         "vent_moyen": 12,
         "vent_bien": 15,
         "vent_tres_bien": 18,
-        "balise": "",
-        "webcam": ""
+        "balise_url": "",
+        "webcam_url": ""
     },
     8248: {  # Lac de Laffrey
         "nom": "Lac de Laffrey",
@@ -82,8 +82,8 @@ SITES_CRITERIA = {
         "vent_moyen": 10,
         "vent_bien": 13,
         "vent_tres_bien": 16,
-        "balise": "",
-        "webcam": ""
+        "balise_url": "",
+        "webcam_url": ""
     },
     314: {  # Le Lac du Monteynard
         "nom": "Lac du Monteynard",
@@ -91,8 +91,8 @@ SITES_CRITERIA = {
         "vent_moyen": 9,
         "vent_bien": 12,
         "vent_tres_bien": 15,
-        "balise": "https://m.winds-up.com/index.php?p=spot&id=36",
-        "webcam": "https://www.onekite.com/webcam-monteynard"
+        "balise_url": "https://m.winds-up.com/index.php?p=spot&id=36",
+        "webcam_url": "https://www.onekite.com/webcam-monteynard"
     },
     28061: {  # Le Lac du Bourget
         "nom": "Lac du Bourget",
@@ -100,8 +100,8 @@ SITES_CRITERIA = {
         "vent_moyen": 12,
         "vent_bien": 15,
         "vent_tres_bien": 18,
-        "balise": "https://balisemeteo.com/balise.php?idBalise=2456",
-        "webcam": "https://www.skaping.com/grandlac/grandport"
+        "balise_url": "https://balisemeteo.com/balise.php?idBalise=2456",
+        "webcam_url": "https://www.skaping.com/grandlac/grandport"
     },
     179: {  # Le Lac Léman
         "nom": "Lac Léman",
@@ -109,8 +109,8 @@ SITES_CRITERIA = {
         "vent_moyen": 14,
         "vent_bien": 17,
         "vent_tres_bien": 20,
-        "balise": "http://meteo-sciez.fr/site/mesure_vent.php",
-        "webcam": "https://www.skaping.com/excenevex/plage"
+        "balise_url": "http://meteo-sciez.fr/site/mesure_vent.php",
+        "webcam_url": "https://www.skaping.com/excenevex/plage"
     },
     14: {  # L'Almanarre
         "nom": "L'Almanarre",
@@ -118,8 +118,8 @@ SITES_CRITERIA = {
         "vent_moyen": 9,
         "vent_bien": 11,
         "vent_tres_bien": 15,
-        "balise": "https://m.winds-up.com/index.php?p=spot&id=2",
-        "webcam": "https://hyeres.fr/webcams/"
+        "balise_url": "https://m.winds-up.com/index.php?p=spot&id=2",
+        "webcam_url": "https://hyeres.fr/webcams/"
     }
 }
 
