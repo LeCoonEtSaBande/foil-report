@@ -269,12 +269,6 @@ def get_jour_complet(abreviation: str) -> str:
     }
     return jours.get(abreviation, abreviation)
 
-def getSiteCriteria(site_id):
-    return SITES_CRITERIA.get(site_id, None)
-
-def getSitesID():
-    return list(SITES_CRITERIA.keys())
-
 def parse_heure(heure_str: str) -> Tuple[str, str]:
     """
     Extrait le jour et l'heure d'une chaîne comme 'Lu14.03h' et convertit en français.
