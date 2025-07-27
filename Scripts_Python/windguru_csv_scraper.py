@@ -442,16 +442,20 @@ def main():
             data_count = len(wg_data.get('heures', []))
             logger.data_extracted(site_id, data_count)
             
-            save_to_csv_raw(CSV_FOLDER, CSV_DELIMITER, CSV_ENCODING, site_id, wg_data, arome_data, site_name)
-            success_count += 1
-            
             # Log des modèles trouvés
             models_found = []
             if wg_data:
                 models_found.append("WG")
             if arome_data:
                 models_found.append("AROME")
+            else
+                arome_data = wg_data
+                
             logger.site_success(site_id, models_found)
+            
+            save_to_csv_raw(CSV_FOLDER, CSV_DELIMITER, CSV_ENCODING, site_id, wg_data, arome_data, site_name)
+            success_count += 1
+            
         else:
             logger.site_error(site_id, "Aucune donnee extraite")
     
