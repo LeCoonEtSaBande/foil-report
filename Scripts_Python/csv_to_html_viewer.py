@@ -1296,7 +1296,10 @@ class HTMLGenerator:
             bg_color = "#ffeaa7" if not is_night_time(heure) else "#a2c6f7"
             
             # Vérifier s'il y a de la pluie
-            has_rain = rain_val and float(rain_val) > 0
+            try:
+                has_rain = float(rain_val) > 0
+            except (TypeError, ValueError):
+                has_rain = False
             
             # Calculer le maximum des 3 niveaux de nuages
             max_cloud = 0
