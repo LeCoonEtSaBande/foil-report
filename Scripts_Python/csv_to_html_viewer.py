@@ -31,7 +31,7 @@ from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 import webbrowser
 import subprocess
-from config import CSV_FOLDER, FIREFOX_PATH, SITES_CRITERIA
+from config import CSV_FOLDER, FIREFOX_PATH
 from config import getSitesID, getSitesCriteria
 from logger import init_logger, get_logger
 
