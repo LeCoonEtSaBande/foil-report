@@ -439,7 +439,7 @@ def is_direction_favorable(site_id: int, direction_val: float, jour_str: str) ->
     RETOURNE :
     - True si direction favorable, False sinon
     """
-    criteria = SITES_CRITERIA[site_id]
+    criteria = getSiteCriteria(site_id)
     if not criteria:
         return False
     
@@ -481,7 +481,7 @@ def calculate_note(site_id: int, vent: str, rafales: str, direction: str,
     RETOURNE :
     - HTML avec étoiles empilées verticalement
     """
-    criteria = SITES_CRITERIA[site_id]
+    criteria = getSiteCriteria(site_id)
     if not criteria:
         return ""
     
@@ -559,7 +559,7 @@ def get_wind_color_progressive(site_id: int, wind_value: float, check_type: str 
     RETOURNE :
     - Style CSS background-color avec couleur progressive
     """
-    criteria = SITES_CRITERIA[site_id]
+    criteria = getSiteCriteria(site_id)
     if not criteria:
         return ""
     
@@ -647,7 +647,7 @@ def get_wind_background_class(site_id: int, vent: str, rafales: str, direction: 
     RETOURNE :
     - Style CSS background-color ou chaîne vide
     """
-    criteria = SITES_CRITERIA[site_id]
+    criteria = getSiteCriteria(site_id)
     if not criteria:
         return ""
     
@@ -1268,7 +1268,7 @@ class HTMLGenerator:
         update_time_arome = merged.get('update_time_arome', '')
         update_time_wg = merged.get('update_time_wg', '')
 
-        criteria = SITES_CRITERIA[site_id]
+        criteria = getSiteCriteria(site_id)
         balise = criteria["balise"]
         webcam = criteria["webcam"]
         
@@ -1562,7 +1562,7 @@ class HTMLGenerator:
             vent_bg_style = get_wind_background_class(site_id, v, r, d, jour_str, h, p, "vent")
             rafales_bg_style = get_wind_background_class(site_id, v, r, d, jour_str, h, p, "rafales")
             # Vérification direction favorable
-            criteria = SITES_CRITERIA[site_id]
+            criteria = getSiteCriteria(site_id)
             is_good = False
             if criteria:
                 try:
@@ -1605,7 +1605,7 @@ class HTMLGenerator:
                     try:
                         vent_val = float(vent[i]) if vent[i] else 0
                         rafales_val = float(rafales[i]) if rafales[i] else 0
-                        criteria = SITES_CRITERIA[site_id]
+                        criteria = getSiteCriteria(site_id)
                         
                         if criteria:
                             vent_moyen = criteria["vent_moyen"]
