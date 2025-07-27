@@ -63,12 +63,6 @@ options.add_argument("--disable-dev-shm-usage")
 options.add_argument("--disable-web-security")
 options.add_argument("--disable-features=VizDisplayCompositor")
 
-def getSiteCriteria(site_id):
-    return SITES_CRITERIA.get(site_id, None)
-
-def getSitesID():
-    return list(SITES_CRITERIA.keys())
-
 def extract_table_data(table, model_name, update_time):
     """
     Extrait les données d'une table de prévisions Windguru.
