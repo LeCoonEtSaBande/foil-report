@@ -1264,8 +1264,8 @@ class HTMLGenerator:
         update_time_wg = merged.get('update_time_wg', '')
 
         criteria = getSiteCriteria(site_id)
-        balise = criteria["balise"]
-        webcam = criteria["webcam"]
+        balise = criteria["balise_url"]
+        webcam = criteria["webcam_url"]
         
         html = f"""
         <div class="site-card">
