@@ -42,6 +42,8 @@ JS_WAIT_TIME = 2  # Temps d'attente pour le JavaScript
 SITES = [
     72305,  # Le Grand Large à Lyon
     193,    # Chasse sur Rhône
+    2020,   # Porte les Valence
+    8248,   # Lac de Laffrey
     314,    # Le Lac du Monteynard
     28061,  # Le Lac du Bourget
     179,    # Le Lac Leman
