@@ -122,3 +122,9 @@ SITES_CRITERIA = {
         "webcam": "https://hyeres.fr/webcams/"
     }
 }
+
+def getSiteCriteria(site_id):
+    return SITES_CRITERIA.get(site_id, None)
+
+def getSitesID():
+    return list(SITES_CRITERIA.keys())
