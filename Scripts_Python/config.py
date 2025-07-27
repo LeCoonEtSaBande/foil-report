@@ -11,6 +11,7 @@
 # 3. Relancez le scraper
 
 import os
+import sys
 
 # === Chemins relatifs ===
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -128,3 +129,28 @@ def getSiteCriteria(site_id):
 
 def getSitesID():
     return list(SITES_CRITERIA.keys())
+
+def validate_sites_criteria(required_keys=None):
+    if required_keys is None:
+        # Clés obligatoires pour chaque site
+        required_keys = ["nom", "vent_moyen", "vent_bien", "vent_tres_bien"]
+
+    all_valid = True
+
+    for site_id in getSitesID():
+        criteria = getSitesCriteria(site_id)
+        if not criteria:
+            print(f"❌ Erreur : critères manquants pour le site_id {site_id}")
+            all_valid = False
+            continue
+
+        for key in required_keys:
+            if key not in criteria or criteria[key] in (None, '', []):
+                print(f"❌ Erreur : clé manquante ou vide '{key}' pour le site_id {site_id}")
+                all_valid = False
+
+    if not all_valid:
+        print("⛔ Abandon : certains sites sont incomplets.")
+        sys.exit(1)
+
+    print("✅ Tous les sites ont les clés requises.")
