@@ -32,7 +32,7 @@ from typing import Dict, List, Optional, Tuple
 import webbrowser
 import subprocess
 from config import CSV_FOLDER, FIREFOX_PATH
-from config import getSitesID, getSitesCriteria
+from config import getSitesID, getSiteCriteria
 from logger import init_logger, get_logger
 
 class CSVDataReader:
