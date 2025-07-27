@@ -448,7 +448,7 @@ def main():
                 models_found.append("WG")
             if arome_data:
                 models_found.append("AROME")
-            else
+            else:
                 arome_data = wg_data
                 
             logger.site_success(site_id, models_found)
