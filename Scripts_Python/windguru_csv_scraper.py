@@ -40,7 +40,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import queue
 
 # === Import de la configuration ===
-from config import WAIT_TIME, JS_WAIT_TIME, DRIVER_PATH, FIREFOX_PATH, HEADLESS_MODE, SITES
+from config import WAIT_TIME, JS_WAIT_TIME, DRIVER_PATH, FIREFOX_PATH, HEADLESS_MODE, SITES_CRITERIA
 from config import CSV_FOLDER, CSV_ENCODING, CSV_DELIMITER
 from logger import init_logger, get_logger
 
@@ -61,6 +61,12 @@ options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
 options.add_argument("--disable-web-security")
 options.add_argument("--disable-features=VizDisplayCompositor")
+
+def getSiteCriteria(site_id):
+    return SITES_CRITERIA.get(site_id, None)
+
+def getSitesID():
+    return list(SITES_CRITERIA.keys())
 
 def extract_table_data(table, model_name, update_time):
     """
@@ -403,7 +409,7 @@ def main():
     4. Sauvegarde des résultats en CSV
     5. Logging des statistiques finales
     """
-    total_sites = len(SITES)
+    total_sites = len(getSitesID())
     logger = init_logger(total_sites)
     
     # Afficher l'heure locale française
@@ -430,7 +436,7 @@ def main():
     logger.start_scraping()
     
     # Scraping parallèle
-    results = scrape_windguru_parallel(SITES, WAIT_TIME, JS_WAIT_TIME)
+    results = scrape_windguru_parallel(getSitesID(), WAIT_TIME, JS_WAIT_TIME)
     
     # Sauvegarde des résultats
     success_count = 0
