@@ -71,7 +71,7 @@ SITES_CRITERIA = {
     2020: {  # Porte les Valence
         "nom": "Porte les Valence",
         "direction": [],
-        "vent_moyen": "a",
+        "vent_moyen": 12,
         "vent_bien": 15,
         "vent_tres_bien": 18,
         "balise_url": "",
