@@ -11,7 +11,6 @@
 # 3. Relancez le scraper
 
 import os
-import sys
 import re
 
 # === Chemins relatifs ===
