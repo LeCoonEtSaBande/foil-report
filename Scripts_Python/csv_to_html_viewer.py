@@ -18,7 +18,7 @@ ARCHITECTURE :
 - HTMLGenerator : Génération de la page HTML
 - Fonctions utilitaires : Calculs de couleurs, notes, directions
 
-Auteur: [Votre nom]
+Auteur: Le Coon et sa Bande
 Version: 2.0.0
 Date: 2024
 """
@@ -1259,11 +1259,12 @@ class HTMLGenerator:
     
     def _generate_site_html(self, site_id: int, site_data: Dict, merged: Dict) -> str:
         """Génère le HTML pour un site spécifique."""
-        site_name = site_data.get('site_name', f"Site {site_id}")
+        # site_name = site_data.get('site_name', f"Site {site_id}")
         update_time_arome = merged.get('update_time_arome', '')
         update_time_wg = merged.get('update_time_wg', '')
 
         criteria = getSiteCriteria(site_id)
+        site_name = criteria["nom"]
         balise = criteria["balise_url"]
         webcam = criteria["webcam_url"]
         
