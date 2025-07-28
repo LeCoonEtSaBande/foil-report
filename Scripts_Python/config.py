@@ -159,9 +159,3 @@ def validate_sites_criteria(sites_criteria):
 
     print("✅ Tous les sites sont valides.")
 
-# Exemple d'appel
-try:
-    validate_sites_criteria(SITES_CRITERIA)
-except ValueError as e:
-    logger.error(f"Critères des sites à surveiller non valides : {str(e)}")
-    sys.exit(1)
