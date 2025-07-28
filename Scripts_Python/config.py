@@ -12,6 +12,7 @@
 
 import os
 import sys
+import re
 
 # === Chemins relatifs ===
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -130,27 +131,37 @@ def getSiteCriteria(site_id):
 def getSitesID():
     return list(SITES_CRITERIA.keys())
 
-def validate_sites_criteria(required_keys=None):
-    if required_keys is None:
-        # Clés obligatoires pour chaque site
-        required_keys = ["nom", "vent_moyen", "vent_bien", "vent_tres_bien"]
+def is_valid_url(url):
+    return url == "" or re.match(r'^https?://', url)
 
-    all_valid = True
+def validate_sites_criteria(sites_criteria):
+    for site_id in sites_criteria.keys():
+        if not isinstance(site_id, int) or site_id <= 0:
+            raise ValueError(f"Clé invalide : {site_id}. Les identifiants doivent être des entiers strictement positifs.")
 
-    for site_id in getSitesID():
-        criteria = getSitesCriteria(site_id)
-        if not criteria:
-            print(f"❌ Erreur : critères manquants pour le site_id {site_id}")
-            all_valid = False
-            continue
+    for site_id, data in sites_criteria.items():
+        # Vérification du nom
+        nom = data.get("nom")
+        if not isinstance(nom, str) or not nom.strip():
+            raise ValueError(f"Site {site_id} : 'nom' invalide ou vide.")
 
-        for key in required_keys:
-            if key not in criteria or criteria[key] in (None, '', []):
-                print(f"❌ Erreur : clé manquante ou vide '{key}' pour le site_id {site_id}")
-                all_valid = False
+        # Vérification des valeurs de vent
+        for key in ["vent_moyen", "vent_bien", "vent_tres_bien"]:
+            val = data.get(key)
+            if not isinstance(val, int) or val <= 0:
+                raise ValueError(f"Site {site_id} ({nom}) : '{key}' doit être un entier positif. Valeur : {val}")
 
-    if not all_valid:
-        print("⛔ Abandon : certains sites sont incomplets.")
-        sys.exit(1)
+        # Vérification des URLs
+        for url_key in ["balise_url", "webcam_url"]:
+            url_val = data.get(url_key)
+            if not isinstance(url_val, str) or not is_valid_url(url_val):
+                raise ValueError(f"Site {site_id} ({nom}) : '{url_key}' doit être une URL valide ou une chaîne vide.")
 
-    print("✅ Tous les sites ont les clés requises.")
+    print("✅ Tous les sites sont valides.")
+
+# Exemple d'appel
+try:
+    validate_sites_criteria(SITES_CRITERIA)
+except ValueError as e:
+    print("❌ Erreur de validation :", e)
+    sys.exit(1)
