@@ -42,7 +42,7 @@ import queue
 # === Import de la configuration ===
 from config import WAIT_TIME, JS_WAIT_TIME, DRIVER_PATH, FIREFOX_PATH, HEADLESS_MODE
 from config import CSV_FOLDER, CSV_ENCODING, CSV_DELIMITER
-from config import getSitesID
+from config import getSitesID, validate_sites_criteria
 from logger import init_logger, get_logger
 
 # === Verrou global pour synchroniser l'accès au driver ===
@@ -410,6 +410,13 @@ def main():
     # Afficher l'heure locale française
     workflow_start_time = os.environ.get('WORKFLOW_START_TIME')
     workflow_timezone = os.environ.get('WORKFLOW_TIMEZONE', 'Europe/Paris')
+    
+    # Tester la validité des criteres de recherche
+    try:
+        validate_sites_criteria(SITES_CRITERIA)
+    except ValueError as e:
+        logger.error(f"Critères des sites à surveiller non valides : {str(e)}")
+        sys.exit(1)
     
     if workflow_start_time:
         try:
