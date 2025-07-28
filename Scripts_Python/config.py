@@ -134,13 +134,14 @@ def getSitesID():
 def is_valid_url(url):
     return url == "" or re.match(r'^https?://', url)
 
-def validate_sites_criteria(sites_criteria):
+def validate_sites_criteria():
     # site id sont des entiers?
-    for site_id in sites_criteria.keys():
+    
+    for site_id in SITES_CRITERIA.keys():
         if not isinstance(site_id, int) or site_id <= 0:
             raise ValueError(f"Clé invalide : {site_id}. Les identifiants doivent être des entiers strictement positifs.")
 
-    for site_id, data in sites_criteria.items():
+    for site_id, data in SITES_CRITERIA.items():
         # Vérification du nom
         nom = data.get("nom")
         if not isinstance(nom, str) or not nom.strip():
