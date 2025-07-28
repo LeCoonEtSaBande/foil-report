@@ -413,7 +413,7 @@ def main():
     
     # Tester la validité des criteres de recherche
     try:
-        validate_sites_criteria(SITES_CRITERIA)
+        validate_sites_criteria()
     except ValueError as e:
         logger.error(f"Critères des sites à surveiller non valides : {str(e)}")
         sys.exit(1)
