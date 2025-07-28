@@ -135,6 +135,7 @@ def is_valid_url(url):
     return url == "" or re.match(r'^https?://', url)
 
 def validate_sites_criteria(sites_criteria):
+    # site id sont des entiers?
     for site_id in sites_criteria.keys():
         if not isinstance(site_id, int) or site_id <= 0:
             raise ValueError(f"Clé invalide : {site_id}. Les identifiants doivent être des entiers strictement positifs.")
@@ -156,6 +157,4 @@ def validate_sites_criteria(sites_criteria):
             url_val = data.get(url_key)
             if not isinstance(url_val, str) or not is_valid_url(url_val):
                 raise ValueError(f"Site {site_id} ({nom}) : '{url_key}' doit être une URL valide ou une chaîne vide.")
-
-    print("✅ Tous les sites sont valides.")
 
