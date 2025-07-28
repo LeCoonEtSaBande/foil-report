@@ -435,7 +435,7 @@ def main():
         france_time = utc_now.replace(hour=(utc_now.hour + 2) % 24)
         current_time = france_time.strftime("%d/%m/%Y à %H:%M:%S")
     
-    print(f"🕐 Heure locale française: {current_time}")
+    logger.info(f"🕐 Heure locale française: {current_time}")
     
     logger.start_scraping()
     
