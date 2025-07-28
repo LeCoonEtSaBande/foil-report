@@ -163,5 +163,5 @@ def validate_sites_criteria(sites_criteria):
 try:
     validate_sites_criteria(SITES_CRITERIA)
 except ValueError as e:
-    print("❌ Erreur de validation :", e)
+    logger.error(f"Critères des sites à surveiller non valides : {str(e)}")
     sys.exit(1)
