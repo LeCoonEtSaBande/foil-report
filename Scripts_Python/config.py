@@ -69,7 +69,7 @@ SITES_CRITERIA = {
         "webcam_url": ""
     },
     2020: {  # Porte les Valence
-        "nom": "",
+        "nom": "Porte les Valence",
         "direction": [],
         "vent_moyen": "a",
         "vent_bien": 15,
