@@ -418,6 +418,8 @@ def main():
         logger.error(f"Critères des sites à surveiller non valides : {str(e)}")
         sys.exit(1)
     
+    logger.success(f"Critères de recherche valides")
+    
     if workflow_start_time:
         try:
             utc_time = datetime.strptime(workflow_start_time, '%Y-%m-%d %H:%M:%S UTC')
