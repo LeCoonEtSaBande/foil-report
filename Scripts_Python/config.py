@@ -121,7 +121,7 @@ SITES_CRITERIA = {
         "vent_tres_bien": 20,
         "balise_url": "https://m.winds-up.com/index.php?p=spot&id=2",
         "webcam_url": "https://hyeres.fr/webcams/"
-    }
+    },
     824: {  # Brutal beach
         "nom": "Six-Four brutal beach",
         "direction": [(225, 330)],
