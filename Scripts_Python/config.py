@@ -116,11 +116,20 @@ SITES_CRITERIA = {
     14: {  # L'Almanarre
         "nom": "L'Almanarre",
         "direction": [(50, 130), (230, 310)],
-        "vent_moyen": 9,
-        "vent_bien": 11,
-        "vent_tres_bien": 15,
+        "vent_moyen": 10,
+        "vent_bien": 15,
+        "vent_tres_bien": 20,
         "balise_url": "https://m.winds-up.com/index.php?p=spot&id=2",
         "webcam_url": "https://hyeres.fr/webcams/"
+    }
+    824: {  # Brutal beach
+        "nom": "Six-Four brutal beach",
+        "direction": [(225, 330)],
+        "vent_moyen": 10,
+        "vent_bien": 15,
+        "vent_tres_bien": 20,
+        "balise_url": "https://m.winds-up.com/index.php?p=spot&id=86",
+        "webcam_url": "https://m.winds-up.com/index.php?p=spot&id=49&cat=webcam"
     }
 }
 
