@@ -780,7 +780,7 @@ class HTMLGenerator:
         """
         # Récupérer l'heure de mise à jour depuis les données CSV
         current_time = self._get_update_time_from_data()
-        
+
         html = f"""
 <!DOCTYPE html>
 <html lang="fr">
@@ -1250,8 +1250,7 @@ class HTMLGenerator:
     </div>
     
     <script>
-        // Fonction pour formater les données après chargement
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener("DOMContentLoaded", function() {
             // Formatage des directions du vent
             document.querySelectorAll('.dir-cell').forEach(cell => {
                 const angle = cell.textContent;
@@ -1259,6 +1258,19 @@ class HTMLGenerator:
                     const cssAngle = parseFloat(angle) + 180;
                     cell.innerHTML = `<span style="transform: rotate(${cssAngle}deg); display: inline-block; font-size: 2em;">↑</span>`;
                 }
+            });
+    
+            // Scroll synchronisé entre les tableaux
+            const containers = document.querySelectorAll('.table-container');
+            containers.forEach(container => {
+                container.addEventListener('scroll', (e) => {
+                    const scrollLeft = container.scrollLeft;
+                    containers.forEach(other => {
+                        if (other !== container) {
+                            other.scrollLeft = scrollLeft;
+                        }
+                    });
+                });
             });
         });
     </script>
