@@ -859,27 +859,28 @@ class HTMLGenerator:
             margin: 0;
         }}
         
-        .site-header .header-site-links a {{
-            color: white;
-            opacity: 0.8;
+        .site-header .header-site-links {{
+            display: flex;
             gap: 12px;
             font-size: 0.7em;
             text-align: center;
+        }}
+        
+        .site-header .header-site-links a {{
+            color: white;
+            opacity: 0.8;
             text-decoration: none;
             transition: opacity 0.2s ease, text-decoration 0.2s ease;
         }}
         
-        .site-header .header-site-links a:visited {{
+        .site-header .header-site-links a:visited,
+        .site-header .header-site-links a:active {{
             color: white;
         }}
         
         .site-header .header-site-links a:hover {{
             opacity: 1;
             text-decoration: underline;
-        }}
-        
-        .site-header .header-site-links a:active {{
-            color: white;
         }}
         
         .data-table {{
@@ -1271,7 +1272,7 @@ class HTMLGenerator:
         html = f"""
         <div class="site-card">
             <div class="site-header">
-                <h2>📍 {site_name}</h2>
+                <h2 class="site-title">📍 {site_name}</h2>
                 <div class="header-site-links">
                     <a href="https://www.windguru.cz/{site_id}" target="_blank">🔍 Windguru</a>
                     {f'<a href="{balise}" target="_blank">🚩 Balise</a>' if balise else ''}
