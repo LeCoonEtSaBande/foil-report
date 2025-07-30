@@ -1281,7 +1281,7 @@ class HTMLGenerator:
         html = f"""
         <div class="site-card">
             <div class="site-header">
-                <h2 class="site-title">📍 {site_name}</h2>
+                <h2 class="site-title">{site_name}</h2>
                 <div class="header-site-links">
                     <a href="https://www.windguru.cz/{site_id}" target="_blank">🔍 Windguru</a>
                     {f'<a href="{balise}" target="_blank">🚩 Balise</a>' if balise else ''}
