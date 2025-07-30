@@ -1249,9 +1249,16 @@ class HTMLGenerator:
         </div>
     </div>
     
+    </div>
+    
+    <div class="footer">
+        <p>Généré automatiquement par Le Coon Et Sa Bande</p>
+    </div>
+</div>
+
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Formatage des directions du vent
+        document.addEventListener('DOMContentLoaded', function() {
+            // 🔁 1. Rotation des flèches de direction
             document.querySelectorAll('.dir-cell').forEach(cell => {
                 const angle = cell.textContent;
                 if (angle && !isNaN(parseFloat(angle))) {
@@ -1260,16 +1267,26 @@ class HTMLGenerator:
                 }
             });
     
-            // Scroll synchronisé entre les tableaux
+            // 🔄 2. Synchronisation du scroll horizontal entre les tableaux
             const containers = document.querySelectorAll('.table-container');
+            let isSyncingScroll = false; // Empêche les boucles de scroll
+    
             containers.forEach(container => {
-                container.addEventListener('scroll', (e) => {
+                container.addEventListener('scroll', () => {
+                    if (isSyncingScroll) return;
+    
+                    isSyncingScroll = true;
                     const scrollLeft = container.scrollLeft;
+    
                     containers.forEach(other => {
                         if (other !== container) {
                             other.scrollLeft = scrollLeft;
                         }
                     });
+    
+                    setTimeout(() => {
+                        isSyncingScroll = false;
+                    }, 10); // Ajustable : 5–20 ms selon fluidité ressentie
                 });
             });
         });
