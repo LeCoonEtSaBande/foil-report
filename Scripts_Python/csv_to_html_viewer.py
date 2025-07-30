@@ -852,11 +852,16 @@ class HTMLGenerator:
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: nowrap;
+            gap: 12px;
+            overflow-x: auto;
         }}
         
         .site-header h2 {{
             font-size: 1.3em;
             margin: 0;
+            white-space: nowrap;
+            flex-shrink: 0;
         }}
         
         .site-header .header-site-links {{
@@ -864,6 +869,8 @@ class HTMLGenerator:
             gap: 12px;
             font-size: 0.7em;
             text-align: center;
+            white-space: nowrap;
+            flex-shrink: 0;
         }}
         
         .site-header .header-site-links a {{
@@ -1006,8 +1013,10 @@ class HTMLGenerator:
             
             .site-header {{
                 padding: 10px 15px;
-                flex-direction: column;
-                gap: 5px;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                gap: 8px;
+                overflow-x: auto;
             }}
             
             .site-header h2 {{
