@@ -1248,11 +1248,6 @@ class HTMLGenerator:
             <p>Généré automatiquement par Le Coon Et Sa Bande</p>
         </div>
     </div>
-    
-    </div>
-    
-    <div class="footer">
-        <p>Généré automatiquement par Le Coon Et Sa Bande</p>
     </div>
 </div>
 
