@@ -1266,27 +1266,6 @@ class HTMLGenerator:
                     cell.innerHTML = `<span style="transform: rotate(${cssAngle}deg); display: inline-block; font-size: 2em;">↑</span>`;
                 }
             });
-    
-            // 🔄 2. Synchronisation du scroll horizontal entre les tableaux
-            const containers = document.querySelectorAll('.table-container');
-            let isSyncingScroll = false;
-    
-            containers.forEach(container => {
-                container.addEventListener('scroll', () => {
-                    if (!isSyncingScroll) {
-                        window.requestAnimationFrame(() => {
-                            const scrollLeft = container.scrollLeft;
-                            containers.forEach(other => {
-                                if (other !== container) {
-                                    other.scrollLeft = scrollLeft;
-                                }
-                            });
-                            isSyncingScroll = false;
-                        });
-                        isSyncingScroll = true;
-                    }
-                });
-            });
         });
     </script>
 </body>
