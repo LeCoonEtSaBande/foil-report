@@ -1269,24 +1269,22 @@ class HTMLGenerator:
     
             // 🔄 2. Synchronisation du scroll horizontal entre les tableaux
             const containers = document.querySelectorAll('.table-container');
-            let isSyncingScroll = false; // Empêche les boucles de scroll
+            let isSyncingScroll = false;
     
             containers.forEach(container => {
                 container.addEventListener('scroll', () => {
-                    if (isSyncingScroll) return;
-    
-                    isSyncingScroll = true;
-                    const scrollLeft = container.scrollLeft;
-    
-                    containers.forEach(other => {
-                        if (other !== container) {
-                            other.scrollLeft = scrollLeft;
-                        }
-                    });
-    
-                    setTimeout(() => {
-                        isSyncingScroll = false;
-                    }, 10); // Ajustable : 5–20 ms selon fluidité ressentie
+                    if (!isSyncingScroll) {
+                        window.requestAnimationFrame(() => {
+                            const scrollLeft = container.scrollLeft;
+                            containers.forEach(other => {
+                                if (other !== container) {
+                                    other.scrollLeft = scrollLeft;
+                                }
+                            });
+                            isSyncingScroll = false;
+                        });
+                        isSyncingScroll = true;
+                    }
                 });
             });
         });
