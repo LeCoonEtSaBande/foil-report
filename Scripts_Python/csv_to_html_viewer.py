@@ -166,79 +166,6 @@ class CSVDataReader:
         logger.data_loaded(len(self.data))
         return self.data
 
-def merge_models(site_data: dict) -> dict:
-    """
-    Fusionne les données AROME et WG pour un site.
-    
-    Cette fonction combine les données des deux modèles météo :
-    - AROME 1.3km : Modèle haute résolution français
-    - WG (WeatherGuru) : Modèle global
-    
-    STRATÉGIE DE FUSION :
-    - Priorité à AROME pour les heures disponibles
-    - Complément avec WG pour les heures manquantes
-    - Élimination des doublons d'heures
-    
-    ARGUMENTS :
-    - site_data : Données brutes du site avec modèles séparés
-    
-    RETOURNE :
-    - Dict fusionné avec toutes les heures et données combinées
-    """
-    models = site_data.get('models', {})
-    arome = models.get('AROME 1.3km', {})
-    wg = models.get('WG', {})
-
-    heures_arome = arome.get('heures', [])
-    heures_wg = wg.get('heures', [])
-
-    # Fusion des heures (ordre : AROME puis WG sans doublons)
-    heures = list(heures_arome)
-    for h in heures_wg:
-        if h not in heures:
-            heures.append(h)
-
-    # Pour chaque heure, choisir la source et les valeurs
-    source = []
-    def pick(field):
-        vals_arome = arome.get(field, [])
-        vals_wg = wg.get(field, [])
-        res = []
-        for h in heures:
-            if h in heures_arome:
-                idx = heures_arome.index(h)
-                v = vals_arome[idx] if idx < len(vals_arome) else ''
-                res.append(v)
-            elif h in heures_wg:
-                idx = heures_wg.index(h)
-                v = vals_wg[idx] if idx < len(vals_wg) else ''
-                res.append(v)
-            else:
-                res.append('')
-        return res
-
-    for h in heures:
-        if h in heures_arome:
-            source.append('AROME')
-        else:
-            source.append('WG')
-
-    merged = {
-        'heures': heures,
-        'source': source,
-        'vent': pick('vent'),
-        'rafales': pick('rafales'),
-        'direction': pick('direction'),
-        'temp': pick('temp'),
-        'nuages_haut': pick('nuages_haut'),
-        'nuages_moyen': pick('nuages_moyen'),
-        'nuages_bas': pick('nuages_bas'),
-        'pluie': pick('pluie'),
-        'update_time_arome': arome.get('update_time', ''),
-        'update_time_wg': wg.get('update_time', ''),
-    }
-    return merged
-
 def get_jour_complet(abreviation: str) -> str:
     """
     Convertit une abréviation de jour en nom complet français.
@@ -269,6 +196,109 @@ def get_jour_complet(abreviation: str) -> str:
         'Su': 'Dimanche'
     }
     return jours.get(abreviation, abreviation)
+
+def merge_models(site_data: dict) -> dict:
+    """
+    Fusionne les données AROME et WG pour un site.
+    
+    STRATÉGIE DE FUSION :
+    1. Prendre toutes les données AROME (priorité absolue)
+    2. Ajouter WG seulement si l'heure est > heure_max_arome
+    3. Si AROME est vide, prendre tout WG
+    
+    ARGUMENTS :
+    - site_data : Données brutes du site avec modèles séparés
+    
+    RETOURNE :
+    - Dict fusionné avec toutes les heures et données combinées
+    """
+    models = site_data.get('models', {})
+    arome = models.get('AROME 1.3km', {})
+    wg = models.get('WG', {})
+
+    # Vérification de sécurité : s'assurer que arome et wg sont des dictionnaires
+    if arome is None:
+        arome = {}
+    if wg is None:
+        wg = {}
+
+    heures_arome = arome.get('heures', [])
+    heures_wg = wg.get('heures', [])
+    
+    # Si AROME est vide, prendre tout WG
+    if not heures_arome:
+        merged_models = {
+            'heures': list(heures_wg),
+            'source': ['WG'] * len(heures_wg),
+            'vent': wg.get('vent', []),
+            'rafales': wg.get('rafales', []),
+            'direction': wg.get('direction', []),
+            'temp': wg.get('temp', []),
+            'nuages_haut': wg.get('nuages_haut', []),
+            'nuages_moyen': wg.get('nuages_moyen', []),
+            'nuages_bas': wg.get('nuages_bas', []),
+            'pluie': wg.get('pluie', []),
+            'update_time_arome': arome.get('update_time', ''),
+            'update_time_wg': wg.get('update_time', ''),
+        }
+        return merged_models
+
+    # Initialiser merged_models avec toutes les données AROME
+    merged_models = {
+        'heures': list(heures_arome),
+        'source': ['AROME'] * len(heures_arome),
+        'vent': arome.get('vent', []),
+        'rafales': arome.get('rafales', []),
+        'direction': arome.get('direction', []),
+        'temp': arome.get('temp', []),
+        'nuages_haut': arome.get('nuages_haut', []),
+        'nuages_moyen': arome.get('nuages_moyen', []),
+        'nuages_bas': arome.get('nuages_bas', []),
+        'pluie': arome.get('pluie', []),
+        'update_time_arome': arome.get('update_time', ''),
+        'update_time_wg': wg.get('update_time', ''),
+    }
+    
+    # Trouver l'heure maximale d'AROME pour la comparaison
+    def parse_heure_for_comparison(heure_str):
+        """Parse une heure pour la comparaison temporelle"""
+        try:
+            jour_complet, heure_str_num = parse_heure(heure_str)
+            if jour_complet and heure_str_num:
+                parts = jour_complet.split()
+                if len(parts) >= 2:
+                    date = int(parts[1])
+                    heure = int(heure_str_num)
+                    return (date, heure)
+        except:
+            pass
+        return (0, 0)
+    
+    # Trouver l'heure maximale d'AROME
+    if heures_arome:
+        heure_max_arome = max(heures_arome, key=parse_heure_for_comparison)
+        heure_max_arome_parsed = parse_heure_for_comparison(heure_max_arome)
+    else:
+        heure_max_arome_parsed = (0, 0)
+    
+    # Ajouter WG seulement si l'heure est > heure_max_arome
+    for i, heure_wg in enumerate(heures_wg):
+        heure_wg_parsed = parse_heure_for_comparison(heure_wg)
+        
+        # Si l'heure WG est supérieure à l'heure max AROME, l'ajouter
+        if heure_wg_parsed > heure_max_arome_parsed:
+            merged_models['heures'].append(heure_wg)
+            merged_models['source'].append('WG')
+            
+            # Ajouter les données correspondantes
+            for field in ['vent', 'rafales', 'direction', 'temp', 'nuages_haut', 'nuages_moyen', 'nuages_bas', 'pluie']:
+                wg_data = wg.get(field, [])
+                if i < len(wg_data):
+                    merged_models[field].append(wg_data[i])
+                else:
+                    merged_models[field].append('')
+    
+    return merged_models
 
 def parse_heure(heure_str: str) -> Tuple[str, str]:
     """
